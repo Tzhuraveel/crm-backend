@@ -9,6 +9,10 @@ export class AppConfigServiceStatic {
     return Number(ConfigurationServiceStatic.get('APP_PORT'));
   }
 
+  static get secretKey(): string {
+    return ConfigurationServiceStatic.get('SECRET_TOKEN_KEY');
+  }
+
   static get webServerHost(): string {
     return ConfigurationServiceStatic.get('APP_WEB_SERVER_HOST');
   }

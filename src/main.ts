@@ -3,12 +3,11 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { EnvironmentConfigService } from './config';
+import { AppConfigServiceStatic } from './config/app/configuration.service-static';
 import { HttpExceptionFilter } from './core/exception';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(EnvironmentConfigService);
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
@@ -28,6 +27,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/doc', app, document);
 
-  await app.listen(5000);
+  await app.listen(AppConfigServiceStatic.port);
 }
 bootstrap().then();

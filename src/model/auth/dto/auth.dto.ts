@@ -16,4 +16,14 @@ export class LoginDto {
   @Transform(({ value }) => value.trim())
   @Matches(regexExpression.EMAIL)
   email: string;
+
+  @ApiProperty({
+    required: true,
+    type: String,
+    example: '234Fsfe3#',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @Transform(({ value }) => value.trim())
+  password: string;
 }
