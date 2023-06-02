@@ -26,7 +26,6 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-
 ## Collection
 
 [Swagger](http://localhost:5000/api/doc/#) collection
