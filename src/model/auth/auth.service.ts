@@ -5,17 +5,22 @@ import { EDbField, EDynamicallyAction } from '../../core/enum/dynamic.enum';
 import { ITokenPair } from '../../core/interface';
 import { TokenService } from '../../core/module/token';
 import { PasswordService } from '../../core/service';
-import { AuthRepository } from './auth.repository';
-import { LoginDto } from './dto';
+import { LoginDto } from './models/dto';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly tokenService: TokenService,
+    private readonly password: PasswordService,
+  ) {}
   public async checkIsUserExist(
     actionWithFoundField: EDynamicallyAction,
     field: string | number,
     dbField: EDbField,
   ): Promise<User> {
-    const foundItem = await this.authRepository.findByUniqueField(
+    const foundItem = await this.userRepository.findByUniqueField(
       field,
       dbField,
     );
@@ -34,18 +39,13 @@ export class AuthService {
     }
   }
 
-  constructor(
-    private readonly authRepository: AuthRepository,
-    private readonly tokenService: TokenService,
-    private readonly password: PasswordService,
-  ) {}
-
   public async login(credentials: LoginDto): Promise<ITokenPair> {
     const userFromDb = await this.checkIsUserExist(
       EDynamicallyAction.NEXT,
       credentials.email,
       EDbField.EMAIL,
     );
+    console.log('34');
 
     await this.password.compare(credentials.password, userFromDb.password);
 

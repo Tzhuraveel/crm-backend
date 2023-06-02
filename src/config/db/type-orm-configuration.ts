@@ -2,6 +2,7 @@ import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import * as Path from 'path';
 import { DataSourceOptions } from 'typeorm';
 
+import { Group, Orders, Token, User } from '../../core/database/entities';
 import { MySqlConfigModule } from './config.module';
 import { MySqlConfigService } from './configuration.service';
 import { MySqlConfigServiceStatic } from './configuration.service-static';
@@ -18,7 +19,6 @@ export class TypeOrmConfigurations {
   }
 
   static get config(): TypeOrmModuleAsyncOptions {
-    const environment = !!process.env.NODE_ENV;
     return {
       imports: [MySqlConfigModule],
       useFactory: (configService: MySqlConfigService) => ({
@@ -30,7 +30,7 @@ export class TypeOrmConfigurations {
         database: configService.database,
         synchronize: false,
         migrationsRun: configService.runMigrations,
-        entities: [`**/*.entity${environment ? '{.ts,.js}' : '{.js, .ts}'}`],
+        entities: [User, Group, Orders, Token],
         migrationsTableName: 'migrations',
         migrations: [
           `${this.workingDirectory}src/core/database/migrations/*.ts`,

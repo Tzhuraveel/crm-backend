@@ -14,16 +14,7 @@ export class AppConfigService {
     return Number(this.appConfiguration.port);
   }
 
-  get hostname(): string {
-    switch (process.platform) {
-      case 'win32':
-        return `localhost`;
-      default:
-        return '0.0.0.0';
-    }
-  }
-
-  get apiServerHost(): string {
-    return this.appConfiguration.apiServerHost;
+  get secretKey(): string {
+    return this.appConfiguration.secretTokenKey;
   }
 }

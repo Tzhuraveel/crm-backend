@@ -1,24 +1,26 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppConfigServiceStatic } from '../../../config/app/configuration.service-static';
-import { Token } from '../../database/entities';
+import { AppConfigModule } from '../../../config/app/config.module';
+import { AppConfigService } from '../../../config/app/configuration.service';
 import { TokenRepository } from './token.repository';
 import { TokenService } from './token.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Token]),
-    JwtModule.register({
-      global: true,
-      secret: AppConfigServiceStatic.secretKey,
-      signOptions: {
-        expiresIn: '10m',
-      },
+    JwtModule.registerAsync({
+      imports: [AppConfigModule],
+      useFactory: async (configService: AppConfigService) => ({
+        secret: configService.secretKey,
+        signOptions: {
+          expiresIn: '10m',
+        },
+        global: true,
+      }),
+      inject: [AppConfigService],
     }),
   ],
   providers: [TokenService, TokenRepository],
-  exports: [TokenService, TokenRepository],
+  exports: [TokenService],
 })
 export class TokenModule {}

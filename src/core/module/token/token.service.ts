@@ -28,7 +28,7 @@ export class TokenService {
       this.jwtService.signAsync(payload, { expiresIn: '20m' }),
     ]);
 
-    await this.tokenRepository.create(
+    await this.tokenRepository.createToken(
       accessToken,
       refreshToken,
       payload.userId,

@@ -1,29 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { Token } from '../../database/entities';
 
 @Injectable()
-export class TokenRepository {
-  constructor(
-    @InjectRepository(Token)
-    private readonly tokenRepository: Repository<Token>,
-  ) {}
-
-  public async deleteMany(createdAt: Date) {
-    await this.tokenRepository.delete({ createdAt });
+export class TokenRepository extends Repository<Token> {
+  constructor(private readonly dataSource: DataSource) {
+    super(Token, dataSource.manager);
   }
 
-  public async create(accessToken, refreshToken, userId) {
-    await this.tokenRepository.save({ accessToken, refreshToken, userId });
+  public async deleteMany(createdAt: Date) {
+    await this.delete({ createdAt });
+  }
+
+  public async createToken(accessToken, refreshToken, userId) {
+    await this.save({ accessToken, refreshToken, userId });
   }
 
   public async findByToken(refreshToken: string): Promise<Token> {
-    return this.tokenRepository.findOne({ where: { refreshToken } });
+    return this.findOne({ where: { refreshToken } });
   }
 
   public async findByAccessTokenToken(accessToken: string): Promise<Token> {
-    return this.tokenRepository.findOne({ where: { accessToken } });
+    return this.findOne({ where: { accessToken } });
   }
 }

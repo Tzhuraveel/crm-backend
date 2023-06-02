@@ -10,7 +10,7 @@ import {
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
-import { LoginDto, TokenResponseDto } from './dto';
+import { LoginDto, TokenResponseDto } from './models/dto';
 
 @ApiTags('auth')
 @Controller('auth')

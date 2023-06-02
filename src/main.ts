@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { AppConfigServiceStatic } from './config/app/configuration.service-static';
+import { AppConfigService } from './config/app/configuration.service';
 import { HttpExceptionFilter } from './core/exception';
 
 async function bootstrap() {
@@ -31,6 +31,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/doc', app, document);
 
-  await app.listen(AppConfigServiceStatic.port);
+  const appConfig = app.get<AppConfigService>(AppConfigService);
+  await app.listen(appConfig.port, () => console.log(appConfig.port));
 }
 bootstrap().then();

@@ -18,6 +18,7 @@ export class MySqlConfigServiceStatic {
   }
 
   static get database(): string {
+    console.log('34');
     return ConfigurationServiceStatic.get('DATABASE_NAME');
   }
 
