@@ -29,8 +29,10 @@
 
 ## Collection
 
- <h3>[Swagger](http://localhost:5000/api/doc/#) collection</h3>
- <h3>[Postman](http://localhost:5000/api/doc/#) collection</h3>
+[Swagger](http://localhost:5000/api/doc/#) collection
+
+
+[Postman](https://github.com/Tzhuraveel/crm-backend/blob/master/CRM%20SCHOOL.postman_collection.json) collection
 
 
 ## Installation
