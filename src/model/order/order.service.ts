@@ -17,8 +17,8 @@ export class OrderService {
     const take = 25;
     const skip = take * (page - 1);
 
-    let sort;
-    let orderBy;
+    let sort = ESort.DESC;
+    let orderBy = 'id';
     if (order) {
       const isMinus = order.charAt(0) === '-';
 

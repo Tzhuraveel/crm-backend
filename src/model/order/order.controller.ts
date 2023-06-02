@@ -12,7 +12,7 @@ import { BearerGuard } from '../../core/guard/bearer.guard';
 import { OrderResponseDto, QueryDto } from './dto';
 import { OrderService } from './order.service';
 
-@ApiTags('order')
+@ApiTags('orders')
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
@@ -26,7 +26,6 @@ export class OrderController {
   })
   @ApiOkResponse({ type: [OrderResponseDto] })
   private async getAllByQuery(@Res() res, @Query() pageParameters: QueryDto) {
-    console.log(pageParameters);
     const orders = await this.orderService.getAllByQuery(pageParameters);
 
     return res.status(HttpStatus.OK).json(orders);
