@@ -6,11 +6,9 @@ import {
   Post,
   Req,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { BearerGuard } from '../../core/guard/bearer.guard';
 import { AuthService } from './auth.service';
 import { LoginDto, TokenResponseDto } from './dto';
 
@@ -36,7 +34,6 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(tokenPair);
   }
 
-  @UseGuards(BearerGuard)
   @ApiOperation({
     description:
       'Refresh token. you should send the token in the "header" in the "authorization" field. If refresh token did' +
@@ -48,6 +45,7 @@ export class AuthController {
   @Get('refresh')
   public async refresh(@Req() req, @Res() res): Promise<TokenResponseDto> {
     const { authorization } = req.headers;
+    console.log(authorization);
 
     const tokenPair = await this.authService.refresh(authorization);
 
