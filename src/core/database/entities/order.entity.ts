@@ -1,18 +1,13 @@
 import { IsOptional, IsString } from 'class-validator';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { ECourse, ECourseFormat, ECourseType, EUserStatus } from '../../enum';
+import { TimeStamp } from './abstract.entity';
 import { Group } from './group.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class Orders {
+export class Orders extends TimeStamp {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -78,7 +73,4 @@ export class Orders {
 
   @ManyToOne(() => Group, (group) => group.orders)
   group?: Group;
-
-  @CreateDateColumn({ name: 'createdAte' })
-  createdAte: Date;
 }

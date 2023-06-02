@@ -1,9 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { User } from '../../core/database/entities';
 import { EDbField, EDynamicallyAction } from '../../core/enum/dynamic.enum';
 import { ITokenPair } from '../../core/interface';
+import { TokenService } from '../../core/module/token';
 import { PasswordService } from '../../core/service';
 import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dto';
@@ -12,7 +12,7 @@ import { LoginDto } from './dto';
 export class AuthService {
   public async checkIsUserExist(
     actionWithFoundField: EDynamicallyAction,
-    field: string,
+    field: string | number,
     dbField: EDbField,
   ): Promise<User> {
     const foundItem = await this.authRepository.findByUniqueField(
@@ -36,8 +36,8 @@ export class AuthService {
 
   constructor(
     private readonly authRepository: AuthRepository,
+    private readonly tokenService: TokenService,
     private readonly password: PasswordService,
-    private readonly jwtService: JwtService,
   ) {}
 
   public async login(credentials: LoginDto): Promise<ITokenPair> {
@@ -49,17 +49,37 @@ export class AuthService {
 
     await this.password.compare(credentials.password, userFromDb.password);
 
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync({
-        userId: userFromDb.id,
-        role: userFromDb.role,
-      }),
-      this.jwtService.signAsync(
-        { userId: userFromDb.id, role: userFromDb.role },
-        { expiresIn: '15d' },
-      ),
-    ]);
+    return await this.tokenService.createTokenPair({
+      userId: userFromDb.id,
+      role: userFromDb.role,
+    });
+  }
 
-    return { accessToken, refreshToken };
+  public async refresh(token): Promise<ITokenPair> {
+    if (!token) {
+      throw new HttpException('No token', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.tokenService.verifyToken(token);
+
+    const tokenFromDb = await this.tokenService.findByToken(token);
+
+    if (!tokenFromDb) {
+      throw new HttpException(
+        'Token deleted or expired',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const userFromDb = await this.checkIsUserExist(
+      EDynamicallyAction.NEXT,
+      tokenFromDb.userId,
+      EDbField.ID,
+    );
+
+    return await this.tokenService.createTokenPair({
+      userId: userFromDb.id,
+      role: userFromDb.role,
+    });
   }
 }

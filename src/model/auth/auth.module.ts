@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppConfigServiceStatic } from '../../config/app/configuration.service-static';
-import { User } from '../../core/database/entities';
+import { Token, User } from '../../core/database/entities';
+import { TokenModule } from '../../core/module/token';
 import { PasswordModule } from '../../core/service';
 import { AuthController } from './auth.controller';
 import { AuthRepository } from './auth.repository';
@@ -11,17 +10,12 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    JwtModule.register({
-      secret: AppConfigServiceStatic.secretKey,
-      signOptions: {
-        expiresIn: '1h',
-      },
-    }),
+    TypeOrmModule.forFeature([User, Token]),
     PasswordModule,
+    TokenModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthRepository],
-  exports: [AuthRepository],
+  exports: [AuthRepository, AuthService],
 })
 export class AuthModule {}

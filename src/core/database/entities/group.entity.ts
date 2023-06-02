@@ -1,10 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { TimeStamp } from './abstract.entity';
 import { Orders } from './order.entity';
 
 @Entity()
-export class Group {
+export class Group extends TimeStamp {
   @PrimaryGeneratedColumn()
   id: number;
 

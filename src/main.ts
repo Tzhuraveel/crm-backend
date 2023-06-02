@@ -19,6 +19,10 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: 'http://localhost:3000',
+  });
+
   const config = new DocumentBuilder()
     .setTitle('CRM')
     .setDescription('The CRM Programming School API description')

@@ -16,7 +16,7 @@ export class AuthRepository {
     await this.authRepository.save(body);
   }
 
-  public async findByUniqueField(field: string, dbField: EDbField) {
+  public async findByUniqueField(field: string | number, dbField: EDbField) {
     return this.authRepository.findOne({ where: { [dbField]: field } });
   }
 }
