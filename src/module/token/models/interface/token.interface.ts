@@ -1,4 +1,4 @@
-import { EUserRole } from '../enum';
+import { EUserRole } from '../../../../core/enum';
 
 export interface ITokenPair {
   accessToken: string;

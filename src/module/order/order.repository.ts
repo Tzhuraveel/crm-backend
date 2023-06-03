@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { Orders } from '../../core/database/entities';
 import { IParameterSearch } from '../../core/interface';
 
 @Injectable()
-export class OrderRepository {
-  constructor(
-    @InjectRepository(Orders)
-    private readonly ordersRepository: Repository<Orders>,
-  ) {}
+export class OrderRepository extends Repository<Orders> {
+  constructor(private readonly dataSource: DataSource) {
+    super(Orders, dataSource.manager);
+  }
 
   public async getAllByQuery(
     parameterSearch: IParameterSearch,
   ): Promise<[Orders[], number]> {
-    return await this.ordersRepository.findAndCount({
+    return await this.findAndCount({
       where: parameterSearch.whereField,
       take: parameterSearch.take,
       skip: parameterSearch.skip,

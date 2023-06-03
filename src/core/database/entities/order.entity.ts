@@ -1,7 +1,12 @@
 import { IsOptional, IsString } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { ECourse, ECourseFormat, ECourseType, EUserStatus } from '../../enum';
+import {
+  ECourse,
+  ECourseFormat,
+  ECourseType,
+} from '../../../module/order/models/enum/course.enum';
+import { EUserStatus } from '../../enum';
 import { TimeStamp } from './abstract.entity';
 import { Group } from './group.entity';
 import { User } from './user.entity';

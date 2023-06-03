@@ -7,17 +7,21 @@ import { AppConfigModule } from './config/app/config.module';
 import { TypeOrmConfigurations } from './config/db/type-orm-configuration';
 import { CronModule } from './core/cron';
 import { PassportWrapperModule } from './core/strategy';
-import { AuthModule } from './model/auth';
-import { OrderModule } from './model/order';
+import { AuthModule } from './module/auth';
+import { OrderModule } from './module/order';
+import { TokenModule } from './module/token';
+import { UserModule } from './module/user';
 
 @Module({
   imports: [
+    TypeOrmModule.forRootAsync(TypeOrmConfigurations.config),
     AuthModule,
     AppConfigModule,
-    TypeOrmModule.forRootAsync(TypeOrmConfigurations.config),
+    TokenModule,
     CronModule,
     PassportWrapperModule,
     OrderModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

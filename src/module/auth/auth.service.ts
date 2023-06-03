@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { User } from '../../core/database/entities';
-import { EDbField, EDynamicallyAction } from '../../core/enum/dynamic.enum';
-import { ITokenPair } from '../../core/interface';
-import { TokenService } from '../../core/module/token';
+import { EDbField, EDynamicallyAction } from '../../core/enum';
 import { PasswordService } from '../../core/service';
+import { TokenService } from '../token';
+import { ITokenPair } from '../token/models/interface';
 import { LoginDto } from './models/dto';
 import { UserRepository } from './user.repository';
 

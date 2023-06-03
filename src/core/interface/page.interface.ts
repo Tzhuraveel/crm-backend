@@ -1,5 +1,5 @@
-import { QueryDto } from '../../model/order/dto';
-import { ESort } from '../enum/dynamic.enum';
+import { QueryDto } from '../../module/order/models/dto';
+import { ESort } from '../enum';
 
 export interface IPaginationPage<T> {
   page: number;

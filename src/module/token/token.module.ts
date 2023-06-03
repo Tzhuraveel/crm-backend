@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { AppConfigModule } from '../../../config/app/config.module';
-import { AppConfigService } from '../../../config/app/configuration.service';
+import { AppConfigModule } from '../../config/app/config.module';
+import { AppConfigService } from '../../config/app/configuration.service';
 import { TokenRepository } from './token.repository';
 import { TokenService } from './token.service';
 

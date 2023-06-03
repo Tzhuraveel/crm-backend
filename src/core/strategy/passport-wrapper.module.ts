@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 
-import { AuthModule } from '../../model/auth';
-import { TokenModule } from '../module/token';
+import { AuthModule } from '../../module/auth';
+import { TokenModule } from '../../module/token';
 import { BearerStrategy } from './bearer.strategy';
 
 @Global()

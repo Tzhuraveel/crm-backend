@@ -3,7 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
 
-import { TokenService } from '../module/token';
+import { TokenService } from '../../module/token';
 
 dayjs.extend(utc);
 

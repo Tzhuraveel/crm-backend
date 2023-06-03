@@ -9,7 +9,7 @@ import {
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { BearerGuard } from '../../core/guard/bearer.guard';
-import { OrderResponseDto, QueryDto } from './dto';
+import { OrderResponseDto, QueryDto } from './models/dto';
 import { OrderService } from './order.service';
 
 @ApiTags('orders')

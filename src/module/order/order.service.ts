@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ILike } from 'typeorm';
 
 import { Orders } from '../../core/database/entities';
-import { ESort } from '../../core/enum/dynamic.enum';
+import { ESort } from '../../core/enum';
 import { IPaginationPage, IParameterSearch } from '../../core/interface';
-import { QueryDto } from './dto';
+import { QueryDto } from './models/dto';
 import { OrderRepository } from './order.repository';
 
 @Injectable()

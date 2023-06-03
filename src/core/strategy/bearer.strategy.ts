@@ -6,10 +6,10 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-http-bearer';
 
-import { AuthService } from '../../model/auth/auth.service';
-import { EDbField, EDynamicallyAction } from '../enum/dynamic.enum';
-import { ITokenPayload } from '../interface';
-import { TokenService } from '../module/token';
+import { AuthService } from '../../module/auth/auth.service';
+import { TokenService } from '../../module/token';
+import { ITokenPayload } from '../../module/token/models/interface';
+import { EDbField, EDynamicallyAction } from '../enum';
 
 @Injectable()
 export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {
