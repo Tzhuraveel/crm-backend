@@ -45,7 +45,6 @@ export class AuthController {
   @Get('refresh')
   public async refresh(@Req() req, @Res() res): Promise<TokenResponseDto> {
     const { authorization } = req.headers;
-    console.log(authorization);
 
     const tokenPair = await this.authService.refresh(authorization);
 

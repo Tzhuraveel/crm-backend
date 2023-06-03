@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { User } from '../../core/database/entities';
-import { EDbField } from '../../core/enum/dynamic.enum';
+import { EDbField } from '../../core/enum';
 
 @Injectable()
 export class UserRepository extends Repository<User> {

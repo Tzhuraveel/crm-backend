@@ -5,8 +5,8 @@ import { EDbField, EDynamicallyAction } from '../../core/enum';
 import { PasswordService } from '../../core/service';
 import { TokenService } from '../token';
 import { ITokenPair } from '../token/models/interface';
+import { UserRepository } from '../user/user.repository';
 import { LoginDto } from './models/dto';
-import { UserRepository } from './user.repository';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +45,6 @@ export class AuthService {
       credentials.email,
       EDbField.EMAIL,
     );
-    console.log('34');
 
     await this.password.compare(credentials.password, userFromDb.password);
 
