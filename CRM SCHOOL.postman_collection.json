@@ -12,6 +12,21 @@
 			"item": [
 				{
 					"name": "refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonBody = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", jsonBody.accessToken)\r",
+									"pm.environment.set(\"refreshToken\", jsonBody.refreshToken)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -22,7 +37,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "",
+								"key": "Authorization",
 								"value": "{{refreshToken}}",
 								"type": "text"
 							}
@@ -108,6 +123,123 @@
 			"item": [
 				{
 					"name": "get order by param",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/order",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Roman\",\r\n    \"course\": \"JCX\",\r\n    \"sum\":1000,\r\n    \"alreadyPaid\":400,\r\n    \"status\": \"agree\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/order/497",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"order",
+								"497"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "group",
+			"item": [
+				{
+					"name": "add group",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"march-2023\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/groups",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all group",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -122,18 +254,114 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiNest}}/order?order=id",
+							"raw": "{{apiNest}}/groups",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
-								"order"
-							],
-							"query": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete group",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "order",
-									"value": "id"
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
 								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiNest}}/groups/1",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"groups",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "add comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comment\": \"Ahalay mahalay2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/comments/498",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"comments",
+								"498"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/comments/20",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"comments",
+								"20"
 							]
 						}
 					},
