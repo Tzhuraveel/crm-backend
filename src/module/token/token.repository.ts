@@ -9,10 +9,6 @@ export class TokenRepository extends Repository<Token> {
     super(Token, dataSource.manager);
   }
 
-  public async deleteMany(createdAt: Date) {
-    await this.delete({ createdAt });
-  }
-
   public async createToken(accessToken, refreshToken, userId) {
     await this.save({ accessToken, refreshToken, userId });
   }

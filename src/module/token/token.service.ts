@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { LessThan } from 'typeorm';
 
 import { Token } from '../../core/database/entities';
-import { ITokenPair, ITokenPayload } from './models/interface';
+import { ITokenPair, ITokenPayload } from './model/interface';
 import { TokenRepository } from './token.repository';
 
 @Injectable()
@@ -46,6 +47,9 @@ export class TokenService {
   }
 
   public async deleteManyByDate(createdAt: Date) {
-    await this.tokenRepository.deleteMany(createdAt);
+    const token = await this.tokenRepository.delete({
+      createdAt: LessThan(createdAt),
+    });
+    console.log(token);
   }
 }

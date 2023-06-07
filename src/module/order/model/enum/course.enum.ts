@@ -19,3 +19,11 @@ export enum ECourseFormat {
   STATIC = 'static',
   ONLINE = 'online',
 }
+
+export enum EStatus {
+  WORK = 'in work',
+  NEW = 'new',
+  AGREE = 'agree',
+  DISAGREE = 'disagree',
+  DUBBING = 'dubbing',
+}

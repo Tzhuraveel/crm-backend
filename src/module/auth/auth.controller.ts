@@ -10,7 +10,7 @@ import {
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
-import { LoginDto, TokenResponseDto } from './models/dto';
+import { LoginDto, TokenResponseDto } from './model/dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -36,7 +36,7 @@ export class AuthController {
 
   @ApiOperation({
     description:
-      'Refresh token. you should send the token in the "header" in the "authorization" field. If refresh token did' +
+      'Refresh token. You should send the token in the "header" in the "authorization" field. If refresh token did' +
       ' not expire, you' +
       ' will get new refresh and access tokens',
     summary: 'Refresh',

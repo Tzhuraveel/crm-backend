@@ -1,4 +1,4 @@
-import { QueryDto } from '../../module/order/models/dto';
+import { QueryDto } from '../../module/order/model/dto';
 import { ESort } from '../enum';
 
 export interface IPaginationPage<T> {
@@ -14,7 +14,7 @@ export interface IPaginationPage<T> {
 export interface IParameterSearch {
   take: number;
   skip: number;
-  sort?: ESort;
+  typeSort?: ESort;
   orderBy?: string;
   whereField?: Pick<QueryDto, 'surname' | 'email' | 'age' | 'phone' | 'name'>;
 }

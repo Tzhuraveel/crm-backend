@@ -8,7 +8,7 @@ import { Strategy } from 'passport-http-bearer';
 
 import { AuthService } from '../../module/auth/auth.service';
 import { TokenService } from '../../module/token';
-import { ITokenPayload } from '../../module/token/models/interface';
+import { ITokenPayload } from '../../module/token/model/interface';
 import { EDbField, EDynamicallyAction } from '../enum';
 
 @Injectable()

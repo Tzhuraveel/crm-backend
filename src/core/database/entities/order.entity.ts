@@ -1,13 +1,21 @@
 import { IsOptional, IsString } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import {
   ECourse,
   ECourseFormat,
   ECourseType,
-} from '../../../module/order/models/enum/course.enum';
-import { EUserStatus } from '../../enum';
+  EStatus,
+} from '../../../module/order/model/enum/course.enum';
 import { TimeStamp } from './abstract.entity';
+import { Comment } from './comment.entity';
 import { Group } from './group.entity';
 import { User } from './user.entity';
 
@@ -40,19 +48,6 @@ export class Orders extends TimeStamp {
   @IsOptional()
   age?: number;
 
-  @Column({ type: 'enum', enum: ECourse, nullable: true })
-  @IsOptional()
-  @IsString()
-  course?: ECourse;
-
-  @Column({ type: 'enum', enum: ECourseFormat, nullable: true })
-  @IsOptional()
-  course_format?: ECourseFormat;
-
-  @Column({ type: 'enum', enum: ECourseType, nullable: true })
-  @IsOptional()
-  course_type?: ECourseType;
-
   @Column({ type: 'int', nullable: true })
   @IsOptional()
   sum?: number;
@@ -60,6 +55,18 @@ export class Orders extends TimeStamp {
   @Column({ type: 'int', nullable: true })
   @IsOptional()
   alreadyPaid?: number;
+
+  @Column({ type: 'enum', enum: ECourseType, nullable: true })
+  @IsOptional()
+  course_type?: ECourseType;
+
+  @Column({ type: 'enum', enum: ECourseFormat, nullable: true })
+  @IsOptional()
+  course_format?: ECourseFormat;
+
+  @Column({ type: 'enum', enum: ECourse, nullable: true })
+  @IsOptional()
+  course?: ECourse;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   @IsOptional()
@@ -69,13 +76,18 @@ export class Orders extends TimeStamp {
   @IsOptional()
   msg?: string;
 
-  @Column({ type: 'enum', enum: EUserStatus, nullable: true })
+  @Column({ type: 'enum', enum: EStatus, nullable: true })
   @IsOptional()
-  status?: EUserStatus;
+  status?: EStatus;
 
-  @ManyToOne(() => User, (user) => user.orders)
+  @ManyToOne(() => User, (user) => user.orders, { nullable: true })
+  @JoinColumn({ name: 'manager' })
   manager?: User;
 
-  @ManyToOne(() => Group, (group) => group.orders)
+  @ManyToOne(() => Group, (group) => group.orders, { nullable: true })
+  @JoinColumn({ name: 'group' })
   group?: Group;
+
+  @OneToMany(() => Comment, (comment) => comment.order, { nullable: true })
+  comment?: Comment[];
 }

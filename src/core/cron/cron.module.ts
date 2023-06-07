@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ScheduleModule } from '@nestjs/schedule';
 
 import { TokenModule } from '../../module/token';
 import { TokenCronService } from './token-cron.service';
 
 @Module({
-  imports: [TokenModule, ScheduleModule.forRoot()],
+  imports: [TokenModule],
   providers: [TokenCronService],
 })
 export class CronModule {}

@@ -1,29 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ILike } from 'typeorm';
 
-import { Orders } from '../../core/database/entities';
+import { Group, Orders, User } from '../../core/database/entities';
 import { ESort } from '../../core/enum';
 import { IPaginationPage, IParameterSearch } from '../../core/interface';
-import { QueryDto } from './models/dto';
+import { GroupRepository } from '../group/group.repository';
+import { OrderDto, QueryDto } from './model/dto';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
 export class OrderService {
+  constructor(
+    private readonly orderRepository: OrderRepository,
+    private readonly groupRepository: GroupRepository,
+  ) {}
   public generateParameter({
-    order,
+    sort,
     page,
+    take,
     ...userData
-  }: QueryDto): IParameterSearch {
-    const take = 25;
+  }: QueryDto & { take: number }): IParameterSearch {
     const skip = take * (page - 1);
-
-    let sort = ESort.DESC;
+    let typeSort = ESort.DESC;
     let orderBy = 'id';
-    if (order) {
-      const isMinus = order.charAt(0) === '-';
 
-      sort = isMinus ? ESort.DESC : ESort.ASC;
-      orderBy = isMinus ? order.slice(1, order.length) : order;
+    if (sort) {
+      const isMinus = sort.charAt(0) === '-';
+      typeSort = isMinus ? ESort.DESC : ESort.ASC;
+      orderBy = isMinus ? sort.slice(1, sort.length) : sort;
     }
 
     for (const key in userData) {
@@ -34,22 +38,22 @@ export class OrderService {
       take,
       skip,
       orderBy,
-      sort,
+      typeSort,
       whereField: userData,
     };
   }
-  constructor(private readonly orderRepository: OrderRepository) {}
 
   public async getAllByQuery(
     pageParameters: QueryDto,
+    take = 25,
   ): Promise<IPaginationPage<Orders[]>> {
-    const parameter = this.generateParameter(pageParameters);
+    const parameter = this.generateParameter({ ...pageParameters, take });
 
     const [orders, totalCount] = await this.orderRepository.getAllByQuery(
       parameter,
     );
 
-    const pageCount = Math.ceil(totalCount / 25);
+    const pageCount = Math.ceil(totalCount / take);
     return {
       page: pageParameters.page,
       pageCount,
@@ -59,5 +63,40 @@ export class OrderService {
       perPage: pageParameters.page > 1,
       data: orders,
     };
+  }
+
+  public async update(orderData: OrderDto, manager: User, orderId: number) {
+    const orderFromDb = await this.orderRepository.findOrderWithManager(
+      orderId,
+    );
+
+    if (!orderFromDb) {
+      throw new HttpException('Order not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const { manager: managerFromDb } = orderFromDb;
+
+    if (managerFromDb && managerFromDb.id !== manager.id) {
+      throw new HttpException(
+        'This user is already handled by another manager',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    let groupFromDb: Group;
+    if (orderData.group) {
+      groupFromDb = await this.groupRepository.findByGroupName(orderData.group);
+
+      if (!groupFromDb) {
+        throw new HttpException('Group not found', HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    await this.orderRepository.updateOrder(
+      orderId,
+      orderData,
+      groupFromDb,
+      managerFromDb ? undefined : manager,
+    );
   }
 }

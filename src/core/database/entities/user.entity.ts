@@ -1,7 +1,8 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { EUserRole } from '../../enum';
+import { EUserRole } from '../../../module/user/model/enum/user-entity.enum';
+import { Comment } from './comment.entity';
 import { Orders } from './order.entity';
 
 @Entity()
@@ -32,6 +33,9 @@ export class User {
   @IsString()
   surname: string;
 
-  @OneToMany(() => Orders, (order) => order.manager)
+  @OneToMany(() => Orders, (order) => order.manager, { nullable: true })
   orders?: Orders[];
+
+  @OneToMany(() => Comment, (comment) => comment.manager, { nullable: true })
+  comment?: Orders[];
 }

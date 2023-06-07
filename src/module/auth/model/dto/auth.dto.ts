@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
-import { regexExpression } from '../../../../core/regex';
+import { regexExpression } from '../../../../core/constant/regex';
 
 export class LoginDto {
   @ApiProperty({

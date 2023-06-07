@@ -13,7 +13,7 @@ export class TokenCronService {
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   private async removeExpiredToken() {
-    const minutes = dayjs().utc().subtract(15, 'm').toDate();
+    const minutes = dayjs().utc().subtract(15, 'minutes').toDate();
 
     await this.tokenService.deleteManyByDate(minutes);
   }
