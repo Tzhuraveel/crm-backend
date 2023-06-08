@@ -12,12 +12,4 @@ export class TokenRepository extends Repository<Token> {
   public async createToken(accessToken, refreshToken, userId) {
     await this.save({ accessToken, refreshToken, userId });
   }
-
-  public async findByToken(refreshToken: string): Promise<Token> {
-    return this.findOne({ where: { refreshToken } });
-  }
-
-  public async findByAccessTokenToken(accessToken: string): Promise<Token> {
-    return this.findOne({ where: { accessToken } });
-  }
 }

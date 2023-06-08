@@ -20,9 +20,9 @@ import {
 } from '@nestjs/swagger';
 
 import { Group } from '../../core/database/entities';
-import { BearerGuard } from '../../core/guard/bearer.guard';
+import { BearerGuard } from '../../core/guard';
 import { GroupService } from './group.service';
-import { GroupDto } from './model/dto/group.dto';
+import { GroupDto, GroupResponseDto } from './model/dto/group.dto';
 
 @UseGuards(BearerGuard)
 @ApiTags('groups')
@@ -41,12 +41,12 @@ export class GroupController {
 
   @ApiBody({ type: GroupDto, required: true })
   @ApiOperation({ description: 'add a new group', summary: 'group' })
-  @ApiCreatedResponse()
+  @ApiCreatedResponse({ type: GroupResponseDto })
   @Post()
-  private async addGroup(@Res() res, @Body() body: GroupDto) {
-    await this.groupService.addGroup(body.name);
+  private async addGroup(@Res() res, @Body() body: GroupDto): Promise<Group> {
+    const createdGroup = await this.groupService.addGroup(body.name);
 
-    return res.status(HttpStatus.CREATED).sendStatus(HttpStatus.CREATED);
+    return res.status(HttpStatus.CREATED).json(createdGroup);
   }
 
   @ApiOperation({

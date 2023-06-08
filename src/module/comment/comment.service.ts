@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Comment, User } from '../../core/database/entities';
+import { AnotherManagerException } from '../../core/exception';
 import { OrderRepository } from '../order';
 import { EStatus } from '../order/model/enum/course.enum';
 import { CommentRepository } from './comment.repository';
@@ -33,16 +34,13 @@ export class CommentService {
     );
 
     if (!orderFromDb) {
-      throw new HttpException('Order not found', HttpStatus.BAD_REQUEST);
+      throw new NotFoundException('Order not found');
     }
 
     const { manager: managerFromDb } = orderFromDb;
 
     if (managerFromDb && managerFromDb.id !== manager.id) {
-      throw new HttpException(
-        'This order is already handled by another manager',
-        HttpStatus.FORBIDDEN,
-      );
+      throw new AnotherManagerException();
     }
 
     const [commentFromDb] = await Promise.all([
@@ -67,16 +65,13 @@ export class CommentService {
     const commentFromDb = await this.commentRepository.findByIdWithManager(id);
 
     if (!commentFromDb) {
-      throw new HttpException('Comment not found', HttpStatus.BAD_REQUEST);
+      throw new NotFoundException('Comment not found');
     }
 
     const { manager: managerFromDb } = commentFromDb;
 
     if (managerFromDb && managerFromDb.id !== manager.id) {
-      throw new HttpException(
-        'This order is already handled by another manager',
-        HttpStatus.FORBIDDEN,
-      );
+      throw new AnotherManagerException();
     }
 
     await this.commentRepository.delete(id);

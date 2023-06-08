@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { UserMapper } from '../../core/mapper';
 import { TokenModule } from '../token';
 import { UserRepository } from '../user/user.repository';
 import { AuthController } from './auth.controller';
@@ -9,7 +10,7 @@ import { PasswordService } from './password.service';
 @Module({
   imports: [TokenModule],
   controllers: [AuthController],
-  providers: [AuthService, UserRepository, PasswordService],
+  providers: [AuthService, UserRepository, PasswordService, UserMapper],
   exports: [AuthService],
 })
 export class AuthModule {}

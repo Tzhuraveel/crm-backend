@@ -19,24 +19,24 @@ import {
 } from '@nestjs/swagger';
 
 import { Orders } from '../../core/database/entities';
-import { BearerGuard } from '../../core/guard/bearer.guard';
-import { IPaginationPage } from '../../core/interface';
+import { BearerGuard } from '../../core/guard';
 import { OrderDto, OrderResponseDto, QueryDto } from './model/dto';
+import { IPaginationPage } from './model/interface/page.interface';
 import { OrderService } from './order.service';
 
 @ApiTags('orders')
-@Controller('order')
+@Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @UseGuards(BearerGuard)
-  @Get()
   @ApiOperation({
     description:
       'Get all orders. You can include additional filter criteria based on your specific requirements, such as age, email, etc.',
     summary: 'filter',
   })
   @ApiOkResponse({ type: [OrderResponseDto] })
+  @Get()
   private async getAllByQuery(
     @Res() res,
     @Query() pageParameters: QueryDto,

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
-import { IParameterSearch } from '../../core/interface';
 import { OrderDto } from './model/dto';
+import { IParameterSearch } from './model/interface/page.interface';
 
 const manager = {
   id: true,

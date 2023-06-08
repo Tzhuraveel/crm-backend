@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { DateTime } from 'luxon';
 
 import {
   ECourse,
@@ -15,7 +24,14 @@ export class QueryDto {
   @Transform(({ value }) => +value)
   page? = 1;
 
-  @ApiProperty({ example: 'email', required: false })
+  @ApiProperty({
+    example: 'email',
+    required: false,
+    description:
+      'If you want to sort from largest to smallest, then' +
+      ' you need to put "-" in front of the property. If you want sort from smallest to largest, you only need to' +
+      ' send the property',
+  })
   @IsOptional()
   sort?: string;
 
@@ -36,6 +52,8 @@ export class QueryDto {
   phone?: string;
 
   @ApiProperty({ example: '30', required: false })
+  @Min(0)
+  @Max(120)
   @IsOptional()
   @Transform(({ value }) => +value)
   age?: number;
@@ -68,10 +86,35 @@ export class QueryDto {
   @IsOptional()
   status?: EStatus;
 
-  @ApiProperty({ example: '2023-08-23', required: false })
-  @IsString()
+  @ApiProperty({
+    example: '2023-08-23',
+    required: false,
+    description: 'here you specify the date from which to search for an order',
+  })
+  @Transform(({ value }) => {
+    return DateTime.fromISO(value, { zone: 'UTC' }).toJSDate();
+  })
+  @IsDate()
   @IsOptional()
-  createdAt?: string;
+  start_course?: Date;
+
+  @ApiProperty({
+    example: '2023-08-23',
+    required: false,
+    description: 'here you specify the date to which to search for an order',
+  })
+  @Transform(({ value }) => {
+    return DateTime.fromISO(value, { zone: 'UTC' }).toJSDate();
+  })
+  @IsDate()
+  @IsOptional()
+  end_course?: Date;
+
+  @ApiProperty({ required: true, type: Number, example: 2 })
+  @Transform(({ value }) => +value)
+  @IsInt()
+  @IsOptional()
+  group?: string;
 }
 
 export class OrderDto {
@@ -131,7 +174,9 @@ export class OrderDto {
   @IsOptional()
   status?: EStatus;
 
-  @ApiProperty({ required: true, type: String, example: 'march-2023' })
+  @ApiProperty({ required: true, type: Number, example: 2 })
+  @Transform(({ value }) => +value)
+  @IsInt()
   @IsOptional()
   group?: string;
 }

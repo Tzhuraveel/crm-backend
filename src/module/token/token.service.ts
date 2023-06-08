@@ -38,12 +38,16 @@ export class TokenService {
     return { accessToken, refreshToken };
   }
 
-  public async findByToken(token): Promise<Token> {
-    return await this.tokenRepository.findByToken(token);
+  public async findByRefreshToken(token): Promise<Token> {
+    return await this.tokenRepository.findOne({
+      where: { refreshToken: token },
+    });
   }
 
-  public async findByAccessTokenToken(token): Promise<Token> {
-    return await this.tokenRepository.findByAccessTokenToken(token);
+  public async findByAccessToken(token): Promise<Token> {
+    return await this.tokenRepository.findOne({
+      where: { accessToken: token },
+    });
   }
 
   public async deleteManyByDate(createdAt: Date) {

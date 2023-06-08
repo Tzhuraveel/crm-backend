@@ -1,5 +1,5 @@
-import { QueryDto } from '../../module/order/model/dto';
-import { ESort } from '../enum';
+import { ESort } from '../../../../core/enum';
+import { IOrder } from './order.interface';
 
 export interface IPaginationPage<T> {
   page: number;
@@ -16,5 +16,5 @@ export interface IParameterSearch {
   skip: number;
   typeSort?: ESort;
   orderBy?: string;
-  whereField?: Pick<QueryDto, 'surname' | 'email' | 'age' | 'phone' | 'name'>;
+  whereField?: IOrder;
 }

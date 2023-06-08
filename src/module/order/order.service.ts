@@ -1,11 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ILike } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Between, ILike, LessThan, MoreThan } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
 import { ESort } from '../../core/enum';
-import { IPaginationPage, IParameterSearch } from '../../core/interface';
+import { AnotherManagerException } from '../../core/exception';
 import { GroupRepository } from '../group/group.repository';
 import { OrderDto, QueryDto } from './model/dto';
+import { IOrderByQuery } from './model/interface';
+import {
+  IPaginationPage,
+  IParameterSearch,
+} from './model/interface/page.interface';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -18,11 +23,14 @@ export class OrderService {
     sort,
     page,
     take,
+    end_course,
+    start_course,
     ...userData
-  }: QueryDto & { take: number }): IParameterSearch {
+  }: IOrderByQuery): IParameterSearch {
     const skip = take * (page - 1);
     let typeSort = ESort.DESC;
     let orderBy = 'id';
+    let createdAt;
 
     if (sort) {
       const isMinus = sort.charAt(0) === '-';
@@ -34,12 +42,20 @@ export class OrderService {
       userData[key] = ILike(`%${userData[key]}%`);
     }
 
+    if (end_course && start_course) {
+      createdAt = Between(start_course, end_course);
+    } else if (end_course) {
+      createdAt = LessThan(end_course);
+    } else if (start_course) {
+      createdAt = MoreThan(start_course);
+    }
+
     return {
       take,
       skip,
       orderBy,
       typeSort,
-      whereField: userData,
+      whereField: { ...userData, createdAt },
     };
   }
 
@@ -47,7 +63,10 @@ export class OrderService {
     pageParameters: QueryDto,
     take = 25,
   ): Promise<IPaginationPage<Orders[]>> {
-    const parameter = this.generateParameter({ ...pageParameters, take });
+    const parameter = this.generateParameter({
+      ...pageParameters,
+      take,
+    });
 
     const [orders, totalCount] = await this.orderRepository.getAllByQuery(
       parameter,
@@ -71,16 +90,13 @@ export class OrderService {
     );
 
     if (!orderFromDb) {
-      throw new HttpException('Order not found', HttpStatus.BAD_REQUEST);
+      throw new NotFoundException('Order not found');
     }
 
     const { manager: managerFromDb } = orderFromDb;
 
     if (managerFromDb && managerFromDb.id !== manager.id) {
-      throw new HttpException(
-        'This user is already handled by another manager',
-        HttpStatus.FORBIDDEN,
-      );
+      throw new AnotherManagerException();
     }
 
     let groupFromDb: Group;
@@ -88,7 +104,7 @@ export class OrderService {
       groupFromDb = await this.groupRepository.findByGroupName(orderData.group);
 
       if (!groupFromDb) {
-        throw new HttpException('Group not found', HttpStatus.BAD_REQUEST);
+        throw new NotFoundException('Group not found');
       }
     }
 

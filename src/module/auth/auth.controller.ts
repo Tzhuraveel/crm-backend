@@ -6,11 +6,16 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { User } from '../../core/database/entities';
+import { BearerGuard } from '../../core/guard';
+import { UserResponseDto } from '../user/model/dto';
 import { AuthService } from './auth.service';
-import { LoginDto, TokenResponseDto } from './model/dto';
+import { AccessResponseDto, LoginDto, RefreshResponseDto } from './model/dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,12 +28,12 @@ export class AuthController {
     summary: 'Login user',
   })
   @ApiBody({ type: LoginDto, required: true })
-  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiOkResponse({ type: AccessResponseDto })
   @Post('login')
   public async login(
     @Body() body: LoginDto,
     @Res() res,
-  ): Promise<TokenResponseDto> {
+  ): Promise<AccessResponseDto> {
     const tokenPair = await this.authService.login(body);
 
     return res.status(HttpStatus.OK).json(tokenPair);
@@ -36,18 +41,36 @@ export class AuthController {
 
   @ApiOperation({
     description:
-      'Refresh token. You should send the token in the "header" in the "authorization" field. If refresh token did' +
+      'Refresh token. You should send the bearer token. If token did' +
       ' not expire, you' +
       ' will get new refresh and access tokens',
     summary: 'Refresh',
   })
-  @ApiOkResponse({ type: TokenResponseDto })
+  @ApiOkResponse({ type: RefreshResponseDto })
   @Get('refresh')
-  public async refresh(@Req() req, @Res() res): Promise<TokenResponseDto> {
-    const { authorization } = req.headers;
+  public async refresh(@Req() req, @Res() res): Promise<RefreshResponseDto> {
+    const bearerToken = req.headers.authorization;
 
-    const tokenPair = await this.authService.refresh(authorization);
+    if (!bearerToken && !bearerToken?.startsWith('Bearer ')) {
+      throw new UnauthorizedException('Invalid Bearer Token');
+    }
+    const tokenPair = await this.authService.refresh(
+      bearerToken.replace('Bearer ', ''),
+    );
 
     return res.status(HttpStatus.OK).json(tokenPair);
+  }
+
+  @UseGuards(BearerGuard)
+  @ApiOperation({
+    description: 'Get authenticated user',
+    summary: 'me',
+  })
+  @ApiOkResponse({ type: UserResponseDto })
+  @Get('me')
+  public async findUser(@Req() req, @Res() res): Promise<User> {
+    return res
+      .status(HttpStatus.OK)
+      .json(this.authService.userFromMapper(req.user));
   }
 }

@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsNotEmpty, IsString, Matches, ValidateNested } from 'class-validator';
 
 import { regexExpression } from '../../../../core/constant/regex';
+import { UserResponseDto } from '../../../user/model/dto';
 
 export class LoginDto {
   @ApiProperty({
     required: true,
     type: String,
-    example: 'zhuraveltimofiy2003@gmail.com',
+    example: 'user@gmail.com',
     pattern: `${regexExpression.EMAIL}`,
   })
   @IsNotEmpty()
@@ -28,7 +29,7 @@ export class LoginDto {
   password: string;
 }
 
-export class TokenResponseDto {
+export class RefreshResponseDto {
   @ApiProperty({
     required: true,
     type: String,
@@ -44,4 +45,11 @@ export class TokenResponseDto {
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTYzNzA4OCwiZXhwIjoxNjg1NjQwNjg4fQ.ivFlUGcmNDB5SErHqkGG6DM1ig6Hj4hYnk11PWcQ-Ls',
   })
   refreshToken: string;
+}
+
+export class AccessResponseDto extends RefreshResponseDto {
+  @ApiProperty()
+  @ValidateNested()
+  @Type(() => UserResponseDto)
+  manager: UserResponseDto;
 }

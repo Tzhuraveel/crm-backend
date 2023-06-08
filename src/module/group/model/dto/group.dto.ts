@@ -8,3 +8,8 @@ export class GroupDto {
   @IsString()
   name: string;
 }
+
+export class GroupResponseDto extends GroupDto {
+  @ApiProperty({ required: true, type: Number, example: '3' })
+  id: number;
+}

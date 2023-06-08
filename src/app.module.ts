@@ -4,10 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AppConfigModule } from './config/app/config.module';
+import { AppConfigModule } from './config/app';
 import { TypeOrmConfigurations } from './config/db/type-orm-configuration';
 import { CronModule } from './core/cron';
-import { PassportWrapperModule } from './core/strategy';
+import { PassportWrapperModule } from './core/passport';
 import { AuthModule } from './module/auth';
 import { CommentModule } from './module/comment';
 import { GroupModule } from './module/group';
@@ -17,13 +17,13 @@ import { UserModule } from './module/user';
 
 @Module({
   imports: [
+    PassportWrapperModule,
     TypeOrmModule.forRootAsync(TypeOrmConfigurations.config),
     ScheduleModule.forRoot(),
     AuthModule,
     AppConfigModule,
     TokenModule,
     CronModule,
-    PassportWrapperModule,
     OrderModule,
     UserModule,
     GroupModule,

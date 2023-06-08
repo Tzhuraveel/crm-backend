@@ -40,6 +40,7 @@
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
     "dayjs": "^1.11.7",
+    "luxon": "^3.3.0",
     "mysql2": "^3.3.3",
     "passport": "^0.6.0",
     "passport-http-bearer": "^1.0.1",
