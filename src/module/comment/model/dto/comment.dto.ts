@@ -1,6 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsString, Length, ValidateNested } from 'class-validator';
+
+import { UserResponseDto } from '../../../user/model/dto';
 
 export class CommentDto {
   @ApiProperty({ required: true, type: String })
@@ -10,22 +12,16 @@ export class CommentDto {
   comment: string;
 }
 
-export class ManagerDto {
-  @ApiProperty({ required: true, type: Number, example: 1 })
-  id: number;
-
-  @ApiProperty({ required: true, type: String, example: 'Timofii' })
-  name: string;
-
-  @ApiProperty({ required: true, type: String, example: 'Zhuravel' })
-  surname: string;
-}
+export class ManagerDto extends OmitType(UserResponseDto, [
+  'email',
+  'role',
+] as const) {}
 
 export class CommentResponseDto {
   @ApiProperty({ required: true, type: Number, example: 2 })
   id: number;
 
-  @ApiProperty({ required: true, type: String, example: 'helloworld' })
+  @ApiProperty({ required: true, type: String, example: 'helloWorld' })
   comment: string;
 
   @ApiProperty({

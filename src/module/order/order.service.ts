@@ -101,7 +101,9 @@ export class OrderService {
 
     let groupFromDb: Group;
     if (orderData.group) {
-      groupFromDb = await this.groupRepository.findByGroupName(orderData.group);
+      groupFromDb = await this.groupRepository.findOne({
+        where: { id: orderData.group },
+      });
 
       if (!groupFromDb) {
         throw new NotFoundException('Group not found');

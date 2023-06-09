@@ -16,11 +16,12 @@ export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {
   }
 
   async validate(token): Promise<User> {
+    const user = await this.authService.validateToken(token);
     const tokenFromDb = await this.tokenService.findByAccessToken(token);
 
     if (!tokenFromDb) {
       throw new NotFoundException('Token deleted or expired');
     }
-    return await this.authService.validateToken(token);
+    return user;
   }
 }

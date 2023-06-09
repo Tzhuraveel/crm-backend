@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { Comment, User } from '../../core/database/entities';
+import { User } from '../../core/database/entities';
 import { AnotherManagerException } from '../../core/exception';
+import { CommentMapper } from '../../core/mapper';
 import { OrderRepository } from '../order';
 import { EStatus } from '../order/model/enum/course.enum';
 import { CommentRepository } from './comment.repository';
@@ -9,26 +10,17 @@ import { CommentResponseDto } from './model/dto';
 
 @Injectable()
 export class CommentService {
-  private changeComment({
-    id,
-    comment,
-    createdAt,
-    manager: { name, surname, id: managerId },
-  }: Comment): CommentResponseDto {
-    return {
-      id,
-      comment,
-      createdAt,
-      manager: { id: managerId, name, surname },
-    };
-  }
-
   constructor(
     private readonly commentRepository: CommentRepository,
     private readonly orderRepository: OrderRepository,
+    private readonly commentMapper: CommentMapper,
   ) {}
 
-  public async add(comment: string, orderId: number, manager: User) {
+  public async add(
+    comment: string,
+    orderId: number,
+    manager: User,
+  ): Promise<CommentResponseDto> {
     const orderFromDb = await this.orderRepository.findOrderWithManager(
       orderId,
     );
@@ -58,7 +50,7 @@ export class CommentService {
       }),
     ]);
 
-    return this.changeComment(commentFromDb);
+    return this.commentMapper.toResponse(commentFromDb);
   }
 
   public async delete(id: number, manager: User) {

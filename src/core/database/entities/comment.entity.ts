@@ -18,11 +18,11 @@ export class Comment {
   @Column({ type: 'varchar', length: 250 })
   comment: string;
 
-  @ManyToOne(() => Orders, (order) => order.comment)
+  @ManyToOne(() => Orders, (order) => order.comment, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'orderId' })
   order: number;
 
-  @ManyToOne(() => User, (user) => user.comment)
+  @ManyToOne(() => User, (user) => user.comment, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'manager' })
   manager: User;
 

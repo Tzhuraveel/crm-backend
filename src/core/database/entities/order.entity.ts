@@ -80,11 +80,17 @@ export class Orders extends TimeStamp {
   @IsOptional()
   status?: EStatus;
 
-  @ManyToOne(() => User, (user) => user.orders, { nullable: true })
+  @ManyToOne(() => User, (user) => user.orders, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'manager' })
   manager?: User;
 
-  @ManyToOne(() => Group, (group) => group.orders, { nullable: true })
+  @ManyToOne(() => Group, (group) => group.orders, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'group' })
   group?: Group;
 

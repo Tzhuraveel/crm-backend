@@ -39,7 +39,6 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    debugger;
     return user;
   }
 

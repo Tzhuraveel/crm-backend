@@ -18,7 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { BearerGuard } from '../../core/guard/bearer.guard';
+import { BearerGuard } from '../../core/guard';
 import { CommentService } from './comment.service';
 import { CommentDto, CommentResponseDto } from './model/dto';
 

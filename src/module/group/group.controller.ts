@@ -22,7 +22,7 @@ import {
 import { Group } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
 import { GroupService } from './group.service';
-import { GroupDto, GroupResponseDto } from './model/dto/group.dto';
+import { GroupDto, GroupResponseDto } from './model/dto';
 
 @UseGuards(BearerGuard)
 @ApiTags('groups')
@@ -30,8 +30,8 @@ import { GroupDto, GroupResponseDto } from './model/dto/group.dto';
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
   @ApiOperation({
-    description: 'Get all existing groups',
-    summary: 'get all group',
+    description: 'Get all groups',
+    summary: 'get all groups',
   })
   @ApiOkResponse({ type: [GroupDto] })
   @Get()
@@ -39,8 +39,12 @@ export class GroupController {
     return res.status(HttpStatus.OK).json(await this.groupService.getAll());
   }
 
+  @ApiOperation({
+    description:
+      'Add a new group. The name of group is unique and cannot be repeated',
+    summary: 'add a new group',
+  })
   @ApiBody({ type: GroupDto, required: true })
-  @ApiOperation({ description: 'add a new group', summary: 'group' })
   @ApiCreatedResponse({ type: GroupResponseDto })
   @Post()
   private async addGroup(@Res() res, @Body() body: GroupDto): Promise<Group> {
@@ -51,7 +55,9 @@ export class GroupController {
 
   @ApiOperation({
     description: 'deletion a group',
-    summary: 'deletion a group',
+    summary:
+      'Deletion a group. Deletion a certain group also means deleting the group in the order шin which this group' +
+      ' is used',
   })
   @ApiParam({
     required: true,
