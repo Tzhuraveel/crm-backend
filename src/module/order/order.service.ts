@@ -6,6 +6,7 @@ import { ESort } from '../../core/enum';
 import { AnotherManagerException } from '../../core/exception';
 import { GroupRepository } from '../group/group.repository';
 import { OrderDto, QueryDto } from './model/dto';
+import { EStatus } from './model/enum/course.enum';
 import { IOrderByQuery } from './model/interface';
 import {
   IPaginationPage,
@@ -42,13 +43,10 @@ export class OrderService {
       userData[key] = ILike(`%${userData[key]}%`);
     }
 
-    if (end_course && start_course) {
+    if (end_course && start_course)
       createdAt = Between(start_course, end_course);
-    } else if (end_course) {
-      createdAt = LessThan(end_course);
-    } else if (start_course) {
-      createdAt = MoreThan(start_course);
-    }
+    else if (end_course) createdAt = LessThan(end_course);
+    else if (start_course) createdAt = MoreThan(start_course);
 
     return {
       take,
@@ -89,40 +87,33 @@ export class OrderService {
     manager: User,
     orderId: number,
   ): Promise<Orders> {
+    let groupFromDb: Group;
+    let obstacle = undefined;
+
     const orderFromDb = await this.orderRepository.findOrderWithManager(
       orderId,
     );
-
-    if (!orderFromDb) {
-      throw new NotFoundException('Order not found');
-    }
+    if (!orderFromDb) throw new NotFoundException('Order not found');
 
     const { manager: managerFromDb } = orderFromDb;
-
-    if (managerFromDb && managerFromDb.id !== manager.id) {
+    if (managerFromDb && managerFromDb.id !== manager.id)
       throw new AnotherManagerException();
-    }
 
-    let groupFromDb: Group;
     if (orderData.group) {
       groupFromDb = await this.groupRepository.findOne({
         where: { id: orderData.group },
       });
 
-      if (!groupFromDb) {
-        throw new NotFoundException('Group not found');
-      }
+      if (!groupFromDb) throw new NotFoundException('Group not found');
     }
+
+    if (managerFromDb && orderData.status === EStatus.NEW) obstacle = null;
 
     return await this.orderRepository.updateOrder(
       orderId,
       orderData,
       groupFromDb,
-      managerFromDb ? undefined : manager,
+      managerFromDb ? obstacle : manager,
     );
-  }
-
-  public async getMy(manager: User) {
-    await this.orderRepository.find({ where: { manager } });
   }
 }

@@ -19,9 +19,8 @@ export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {
     const user = await this.authService.validateToken(token);
     const tokenFromDb = await this.tokenService.findByAccessToken(token);
 
-    if (!tokenFromDb) {
-      throw new NotFoundException('Token deleted or expired');
-    }
+    if (!tokenFromDb) throw new NotFoundException('Token deleted or expired');
+
     return user;
   }
 }

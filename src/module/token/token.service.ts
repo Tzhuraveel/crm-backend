@@ -16,9 +16,8 @@ export class TokenService {
   public async verifyToken(token): Promise<ITokenPayload> {
     const payload = (await this.jwtService.verifyAsync(token)) as ITokenPayload;
 
-    if (!payload) {
+    if (!payload)
       throw new HttpException('Token not valid', HttpStatus.BAD_REQUEST);
-    }
 
     return payload;
   }

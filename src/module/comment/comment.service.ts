@@ -25,15 +25,12 @@ export class CommentService {
       orderId,
     );
 
-    if (!orderFromDb) {
-      throw new NotFoundException('Order not found');
-    }
+    if (!orderFromDb) throw new NotFoundException('Order not found');
 
     const { manager: managerFromDb } = orderFromDb;
 
-    if (managerFromDb && managerFromDb.id !== manager.id) {
+    if (managerFromDb && managerFromDb.id !== manager.id)
       throw new AnotherManagerException();
-    }
 
     const [commentFromDb] = await Promise.all([
       this.commentRepository.save({
@@ -56,15 +53,12 @@ export class CommentService {
   public async delete(id: number, manager: User) {
     const commentFromDb = await this.commentRepository.findByIdWithManager(id);
 
-    if (!commentFromDb) {
-      throw new NotFoundException('Comment not found');
-    }
+    if (!commentFromDb) throw new NotFoundException('Comment not found');
 
     const { manager: managerFromDb } = commentFromDb;
 
-    if (managerFromDb && managerFromDb.id !== manager.id) {
+    if (managerFromDb && managerFromDb.id !== manager.id)
       throw new AnotherManagerException();
-    }
 
     await this.commentRepository.delete(id);
   }

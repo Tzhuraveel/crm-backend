@@ -35,9 +35,7 @@ export class AuthService {
       EDbField.ID,
     );
 
-    if (!user) {
-      throw new UnauthorizedException();
-    }
+    if (!user) throw new UnauthorizedException();
 
     return user;
   }
@@ -54,14 +52,10 @@ export class AuthService {
 
     switch (actionWithFoundField) {
       case EDynamicallyAction.NEXT:
-        if (!foundItem) {
-          throw new NotFoundException('User not found');
-        }
+        if (!foundItem) throw new NotFoundException('User not found');
         return foundItem;
       case EDynamicallyAction.THROW:
-        if (foundItem) {
-          throw new HttpException('User already exist', 400);
-        }
+        if (foundItem) throw new HttpException('User already exist', 400);
         break;
     }
   }

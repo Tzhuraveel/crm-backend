@@ -15,9 +15,8 @@ export class GroupService {
   public async addGroup(name: string): Promise<Group> {
     const groupFromDb = await this.groupRepository.findByGroupName(name);
 
-    if (groupFromDb) {
+    if (groupFromDb)
       throw new HttpException('Group already exist', HttpStatus.BAD_REQUEST);
-    }
 
     return await this.groupRepository.save({ name });
   }
@@ -27,9 +26,7 @@ export class GroupService {
       where: { id },
     });
 
-    if (!groupFromDb) {
-      throw new NotFoundError('Group not found');
-    }
+    if (!groupFromDb) throw new NotFoundError('Group not found');
 
     await this.groupRepository.delete(id);
   }

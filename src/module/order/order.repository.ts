@@ -55,15 +55,8 @@ export class OrderRepository extends Repository<Orders> {
     orderId: number,
     orderData: Omit<OrderDto, 'group'>,
     group: Group,
-    manager: User | undefined,
+    manager: User | undefined | null,
   ): Promise<Orders> {
-    await this.createQueryBuilder('orders')
-      .update(Orders)
-      .set({ group, manager, ...orderData })
-      .where('orders.id = :id', {
-        id: orderId,
-      });
-
     await this.update(orderId, {
       ...orderData,
       group,
