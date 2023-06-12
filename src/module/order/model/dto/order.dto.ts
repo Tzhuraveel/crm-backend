@@ -4,6 +4,7 @@ import {
   IsDate,
   IsEnum,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -35,6 +36,7 @@ export class AbstractOrderDto {
   @Min(0)
   @Max(120)
   @Transform(({ value }) => +value)
+  @IsInt()
   age?: number;
 
   @ApiProperty({
@@ -81,6 +83,7 @@ export class AbstractOrderDto {
 
   @ApiProperty({ required: false, type: String, example: '+380932434432' })
   @IsOptional()
+  @IsString()
   phone?: string;
 }
 
@@ -88,7 +91,19 @@ export class QueryDto extends AbstractOrderDto {
   @ApiProperty({ example: 1, required: false })
   @IsOptional()
   @Transform(({ value }) => +value)
+  @IsInt()
   page? = 1;
+
+  @ApiProperty({
+    example: 1,
+    required: false,
+    description:
+      'the manager`s ID, which will be used to search for orders in which this manager processes these orders',
+  })
+  @IsOptional()
+  @Transform(({ value }) => +value)
+  @IsInt()
+  manager: number;
 
   @ApiProperty({
     example: 'email',
@@ -99,6 +114,7 @@ export class QueryDto extends AbstractOrderDto {
       ' send the property',
   })
   @IsOptional()
+  @IsString()
   sort?: string;
 
   @ApiProperty({
@@ -129,10 +145,14 @@ export class QueryDto extends AbstractOrderDto {
 
 export class OrderDto extends AbstractOrderDto {
   @ApiProperty({ required: false, type: Number, example: 10000 })
+  @Transform(({ value }) => +value)
+  @IsNumber()
   @IsOptional()
   sum?: number;
 
   @ApiProperty({ required: false, type: Number, example: 6000 })
+  @Transform(({ value }) => +value)
+  @IsNumber()
   @IsOptional()
   alreadyPaid?: number;
 }

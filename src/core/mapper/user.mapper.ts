@@ -14,8 +14,4 @@ export class UserMapper {
       role: user.role,
     };
   }
-
-  public toManyResponse(users: User[]) {
-    return users.map(this.toResponse);
-  }
 }

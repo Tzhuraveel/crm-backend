@@ -32,14 +32,22 @@
 					},
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{refreshToken}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorization",
-								"value": "{{refreshToken}}",
-								"type": "text"
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -115,6 +123,34 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/auth/me",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -149,12 +185,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/order",
+							"raw": "{{apiNest}}/orders?manager=3",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
-								"order"
+								"orders"
+							],
+							"query": [
+								{
+									"key": "manager",
+									"value": "3"
+								}
 							]
 						}
 					},
@@ -177,7 +219,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Roman\",\r\n    \"course\": \"JCX\",\r\n    \"sum\":1000,\r\n    \"alreadyPaid\":400,\r\n    \"status\": \"agree\"\r\n    \r\n}",
+							"raw": "{\r\n    \"name\": \"Roman\",\r\n    \"course\": \"JCX\",\r\n    \"sum\": 234,\r\n    \"age\": 34, \r\n    \"alreadyPaid\":400,\r\n    \"status\": \"agree\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -185,13 +227,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/order/497",
+							"raw": "{{apiNest}}/orders/500",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
-								"order",
-								"497"
+								"orders",
+								"500"
 							]
 						}
 					},
@@ -219,7 +261,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"march-2023\"\r\n}",
+							"raw": "{\r\n    \"name\": \"march-2022\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -285,13 +327,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{apiNest}}/groups/1",
+							"raw": "{{apiNest}}/groups/2",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"groups",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -327,13 +369,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/comments/498",
+							"raw": "{{apiNest}}/comments/500",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"comments",
-								"498"
+								"500"
 							]
 						}
 					},
@@ -355,13 +397,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiNest}}/comments/20",
+							"raw": "{{apiNest}}/comments/36",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"comments",
-								"20"
+								"36"
 							]
 						}
 					},

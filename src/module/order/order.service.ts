@@ -117,4 +117,8 @@ export class OrderService {
       managerFromDb ? undefined : manager,
     );
   }
+
+  public async getMy(manager: User) {
+    await this.orderRepository.find({ where: { manager } });
+  }
 }

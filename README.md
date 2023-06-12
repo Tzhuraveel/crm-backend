@@ -52,11 +52,14 @@ You can log in to the project using the following credentials and endpoint:
 ```
 Now you are able to use other endpoint. Other endpoints described here [SWAGGER](http://localhost:5000/api/doc/#/) 
 
+# Collection
+
+[POSTMAN](https://github.com/Tzhuraveel/crm-backend/blob/master/CRM%20SCHOOL.postman_collection.json)
+
+[SWAGGER](http://localhost:5000/api/doc/#/)
+
+
 # Author
 
 - Timofii Zhuravel
-- [LINKEDIN](https://www.linkedin.com/in/timofii-zhuravel/) 
-
-
-            
-            
+- [LINKEDIN](https://www.linkedin.com/in/timofii-zhuravel/)
