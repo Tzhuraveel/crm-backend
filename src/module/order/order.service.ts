@@ -84,7 +84,11 @@ export class OrderService {
     };
   }
 
-  public async update(orderData: OrderDto, manager: User, orderId: number) {
+  public async update(
+    orderData: OrderDto,
+    manager: User,
+    orderId: number,
+  ): Promise<Orders> {
     const orderFromDb = await this.orderRepository.findOrderWithManager(
       orderId,
     );
@@ -110,7 +114,7 @@ export class OrderService {
       }
     }
 
-    await this.orderRepository.updateOrder(
+    return await this.orderRepository.updateOrder(
       orderId,
       orderData,
       groupFromDb,

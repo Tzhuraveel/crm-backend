@@ -64,9 +64,9 @@ export class OrderController {
     @Param('orderId', ParseIntPipe) orderId: number,
     @Body()
     body: OrderDto,
-  ): Promise<IPaginationPage<Orders[]>> {
-    await this.orderService.update(body, req.user, orderId);
+  ): Promise<IPaginationPage<Orders>> {
+    const orders = await this.orderService.update(body, req.user, orderId);
 
-    return res.status(HttpStatus.OK).sendStatus(HttpStatus.OK);
+    return res.status(HttpStatus.OK).json(orders);
   }
 }
