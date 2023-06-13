@@ -1,11 +1,8 @@
-import {
-  ECourse,
-  ECourseFormat,
-  ECourseType,
-  EStatus,
-} from '../enum/course.enum';
+import { User } from '../../../../core/database/entities';
+import { ECourse, ECourseFormat, ECourseType, EStatus } from '../enum';
 
-interface IOrderDetail {
+interface IOrderDetails {
+  manager?: User | undefined;
   name?: string;
   surname?: string;
   email?: string;
@@ -17,7 +14,7 @@ interface IOrderDetail {
   status?: EStatus;
 }
 
-export interface IOrderByQuery extends IOrderDetail {
+export interface IOrderByQuery extends IOrderDetails {
   take: number;
   page?: number;
   sort?: string;
@@ -25,6 +22,6 @@ export interface IOrderByQuery extends IOrderDetail {
   end_course?: Date;
 }
 
-export interface IOrder extends IOrderDetail {
+export interface IOrder extends IOrderDetails {
   createdAt: any;
 }

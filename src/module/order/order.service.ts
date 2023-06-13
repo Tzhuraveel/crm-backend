@@ -6,7 +6,7 @@ import { ESort } from '../../core/enum';
 import { AnotherManagerException } from '../../core/exception';
 import { GroupRepository } from '../group/group.repository';
 import { OrderDto, QueryDto } from './model/dto';
-import { EStatus } from './model/enum/course.enum';
+import { EStatus } from './model/enum';
 import { IOrderByQuery } from './model/interface';
 import {
   IPaginationPage,
@@ -20,14 +20,17 @@ export class OrderService {
     private readonly orderRepository: OrderRepository,
     private readonly groupRepository: GroupRepository,
   ) {}
-  public generateParameter({
-    sort,
-    page,
-    take,
-    end_course,
-    start_course,
-    ...userData
-  }: IOrderByQuery): IParameterSearch {
+  private generateParameter(orderOptions: IOrderByQuery): IParameterSearch {
+    const {
+      manager,
+      sort,
+      page = 1,
+      take,
+      end_course,
+      start_course,
+      ...orderDate
+    } = orderOptions;
+
     const skip = take * (page - 1);
     let typeSort = ESort.DESC;
     let orderBy = 'id';
@@ -39,30 +42,37 @@ export class OrderService {
       orderBy = isMinus ? sort.slice(1, sort.length) : sort;
     }
 
-    for (const key in userData) {
-      userData[key] = ILike(`%${userData[key]}%`);
+    for (const key in orderDate) {
+      orderDate[key] = ILike(`%${orderDate[key]}%`);
     }
 
-    if (end_course && start_course)
+    if (end_course && start_course) {
       createdAt = Between(start_course, end_course);
-    else if (end_course) createdAt = LessThan(end_course);
-    else if (start_course) createdAt = MoreThan(start_course);
+    } else if (end_course) {
+      createdAt = LessThan(end_course);
+    } else if (start_course) {
+      createdAt = MoreThan(start_course);
+    }
 
     return {
       take,
       skip,
       orderBy,
       typeSort,
-      whereField: { ...userData, createdAt },
+      whereField: { ...orderDate, createdAt, manager },
     };
   }
 
   public async getAllByQuery(
-    pageParameters: QueryDto,
+    queries: QueryDto,
+    manager: User,
     take = 25,
   ): Promise<IPaginationPage<Orders[]>> {
+    manager = queries.manager ? manager : undefined;
+
     const parameter = this.generateParameter({
-      ...pageParameters,
+      ...queries,
+      manager,
       take,
     });
 
@@ -72,12 +82,12 @@ export class OrderService {
 
     const pageCount = Math.ceil(totalCount / take);
     return {
-      page: pageParameters.page,
+      page: queries.page,
       pageCount,
       itemsCount: orders.length,
       totalCount,
-      nextPage: pageParameters.page < pageCount,
-      perPage: pageParameters.page > 1,
+      nextPage: queries.page < pageCount,
+      perPage: queries.page > 1,
       data: orders,
     };
   }

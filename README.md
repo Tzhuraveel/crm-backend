@@ -39,6 +39,8 @@ In addition, the API documentation is carefully prepared to help developers easi
    ```bash 
    http://localhost:<PORT> #port in .env file
    ```   
+## Project description   
+
 ## Brief project map
 
 There are two roles in this project: `Admin` and `Manager`

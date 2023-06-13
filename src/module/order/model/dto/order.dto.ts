@@ -10,17 +10,20 @@ import {
   Matches,
   Max,
   Min,
+  Validate,
   ValidateNested,
 } from 'class-validator';
 import { DateTime } from 'luxon';
 
 import { regexExpression } from '../../../../core/constant/regex';
+import { EnumTransformValidator } from '../../../../core/validation/decorator';
 import {
   ECourse,
   ECourseFormat,
   ECourseType,
+  EManagerTrue,
   EStatus,
-} from '../enum/course.enum';
+} from '../enum';
 
 export class AbstractOrderDto {
   @ApiProperty({ required: false, type: String, example: 'Timofii' })
@@ -32,11 +35,11 @@ export class AbstractOrderDto {
   surname?: string;
 
   @ApiProperty({ required: false, type: Number, example: 24 })
-  @IsOptional()
-  @Min(0)
-  @Max(120)
   @Transform(({ value }) => +value)
   @IsInt()
+  @IsOptional()
+  @Min(1)
+  @Max(120)
   age?: number;
 
   @ApiProperty({
@@ -77,6 +80,7 @@ export class AbstractOrderDto {
 
   @ApiProperty({ required: false, type: Number, example: 2 })
   @Transform(({ value }) => +value)
+  @Min(1)
   @IsInt()
   @IsOptional()
   group?: number;
@@ -95,15 +99,13 @@ export class QueryDto extends AbstractOrderDto {
   page? = 1;
 
   @ApiProperty({
-    example: 1,
+    example: true,
     required: false,
-    description:
-      'the manager`s ID, which will be used to search for orders in which this manager processes these orders',
+    description: 'show orders that belong to the manager',
   })
+  @Validate(EnumTransformValidator, [EManagerTrue])
   @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  manager: number;
+  manager?: true;
 
   @ApiProperty({
     example: 'email',
@@ -146,12 +148,14 @@ export class QueryDto extends AbstractOrderDto {
 export class OrderDto extends AbstractOrderDto {
   @ApiProperty({ required: false, type: Number, example: 10000 })
   @Transform(({ value }) => +value)
+  @Min(1)
   @IsNumber()
   @IsOptional()
   sum?: number;
 
   @ApiProperty({ required: false, type: Number, example: 6000 })
   @Transform(({ value }) => +value)
+  @Min(1)
   @IsNumber()
   @IsOptional()
   alreadyPaid?: number;

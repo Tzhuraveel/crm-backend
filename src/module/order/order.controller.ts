@@ -38,10 +38,11 @@ export class OrderController {
   @ApiOkResponse({ type: [OrderResponseDto] })
   @Get()
   private async getAllByQuery(
+    @Req() req,
     @Res() res,
-    @Query() pageParameters: QueryDto,
+    @Query() queries: QueryDto,
   ): Promise<IPaginationPage<Orders[]>> {
-    const orders = await this.orderService.getAllByQuery(pageParameters);
+    const orders = await this.orderService.getAllByQuery(queries, req.user);
 
     return res.status(HttpStatus.OK).json(orders);
   }
