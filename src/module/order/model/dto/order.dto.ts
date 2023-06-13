@@ -93,8 +93,9 @@ export class AbstractOrderDto {
 
 export class QueryDto extends AbstractOrderDto {
   @ApiProperty({ example: 1, required: false })
-  @IsOptional()
   @Transform(({ value }) => +value)
+  @Min(1)
+  @IsOptional()
   @IsInt()
   page? = 1;
 

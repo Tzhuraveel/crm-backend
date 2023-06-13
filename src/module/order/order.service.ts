@@ -24,7 +24,7 @@ export class OrderService {
     const {
       manager,
       sort,
-      page = 1,
+      page,
       take,
       end_course,
       start_course,
