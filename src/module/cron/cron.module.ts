@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { TokenModule } from '../../module/token';
+import { TokenModule } from '../token';
 import { TokenCronService } from './token-cron.service';
 
 @Module({
