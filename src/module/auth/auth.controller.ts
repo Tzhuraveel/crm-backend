@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -15,7 +16,12 @@ import { User } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
 import { UserResponseDto } from '../user/model/dto';
 import { AuthService } from './auth.service';
-import { AccessResponseDto, LoginDto, RefreshResponseDto } from './model/dto';
+import {
+  AccessResponseDto,
+  ActivateDto,
+  LoginDto,
+  TokenResponseDto,
+} from './model/dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,7 +33,7 @@ export class AuthController {
       'token to prove the authentication of those credentials.',
     summary: 'Login user',
   })
-  @ApiBody({ type: LoginDto, required: true })
+  @ApiBody({ type: LoginDto })
   @ApiOkResponse({ type: AccessResponseDto })
   @Post('login')
   public async login(
@@ -46,9 +52,9 @@ export class AuthController {
       ' will get new refresh and access tokens',
     summary: 'Refresh',
   })
-  @ApiOkResponse({ type: RefreshResponseDto })
+  @ApiOkResponse({ type: TokenResponseDto })
   @Get('refresh')
-  public async refresh(@Req() req, @Res() res): Promise<RefreshResponseDto> {
+  public async refresh(@Req() req, @Res() res): Promise<TokenResponseDto> {
     const bearerToken = req.headers.authorization;
 
     if (!bearerToken && !bearerToken?.startsWith('Bearer ')) {
@@ -61,16 +67,33 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(tokenPair);
   }
 
-  @UseGuards(BearerGuard)
   @ApiOperation({
     description: 'Get authenticated user',
     summary: 'me',
   })
   @ApiOkResponse({ type: UserResponseDto })
+  @UseGuards(BearerGuard)
   @Get('me')
   public async findUser(@Req() req, @Res() res): Promise<User> {
     return res
       .status(HttpStatus.OK)
       .json(this.authService.userFromMapper(req.user));
+  }
+
+  @ApiOperation({
+    description: 'Activate the user with an action token',
+    summary: 'activate user',
+  })
+  @ApiBody({ required: true, type: ActivateDto })
+  @ApiOkResponse({ type: UserResponseDto })
+  @Post('/activate/:token')
+  private async activateUser(
+    @Res() res,
+    @Body() body: ActivateDto,
+    @Param('token') token: string,
+  ): Promise<UserResponseDto> {
+    const createdUser = await this.authService.activateUser(token, body);
+
+    return res.status(HttpStatus.CREATED).json(createdUser);
   }
 }

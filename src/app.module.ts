@@ -6,10 +6,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from './config/app';
 import { TypeOrmConfigurations } from './config/db/type-orm-configuration';
-import { CronModule } from './core/cron';
 import { PassportWrapperModule } from './core/passport';
+import { AdminModule } from './module/admin';
 import { AuthModule } from './module/auth';
 import { CommentModule } from './module/comment';
+import { CronModule } from './module/cron';
 import { GroupModule } from './module/group';
 import { OrderModule } from './module/order';
 import { TokenModule } from './module/token';
@@ -28,6 +29,7 @@ import { UserModule } from './module/user';
     UserModule,
     GroupModule,
     CommentModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

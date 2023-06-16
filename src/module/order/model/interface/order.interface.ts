@@ -15,6 +15,7 @@ interface IOrderDetails {
 }
 
 export interface IOrderByQuery extends IOrderDetails {
+  id?: number;
   take: number;
   page?: number;
   sort?: string;
@@ -23,5 +24,14 @@ export interface IOrderByQuery extends IOrderDetails {
 }
 
 export interface IOrder extends IOrderDetails {
-  createdAt: any;
+  id?: number;
+  createdAt: Date;
+}
+
+export interface IOrderQueriesData {
+  id?: number;
+  start_course?: Date;
+  end_course?: Date;
+  manager?: boolean;
+  restData: IOrderDetails;
 }

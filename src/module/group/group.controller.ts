@@ -13,6 +13,7 @@ import {
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -64,7 +65,7 @@ export class GroupController {
     name: 'groupId',
     description: 'Group id is required to delete the group',
   })
-  @ApiCreatedResponse()
+  @ApiNoContentResponse()
   @Delete(':groupId')
   private async delete(
     @Res() res,

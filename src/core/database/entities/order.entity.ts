@@ -13,7 +13,7 @@ import {
   ECourseFormat,
   ECourseType,
   EStatus,
-} from '../../../module/order/model/enum/course.enum';
+} from '../../../module/order/model/enum';
 import { TimeStamp } from './abstract.entity';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';

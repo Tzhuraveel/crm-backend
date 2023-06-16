@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { EUserRole } from '../../../module/user/model/enum';
@@ -15,10 +21,18 @@ export class User {
   @IsString()
   email: string;
 
-  @Column({ type: 'varchar', length: 60 })
+  @Column({ type: 'varchar', length: 60, nullable: true })
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @Column({ type: 'boolean', default: false, nullable: true })
+  @IsBoolean()
+  is_active: boolean;
+
+  @Column({ type: 'timestamp', nullable: true })
+  @IsDate()
+  last_login: Date;
 
   @Column({ type: 'enum', enum: EUserRole })
   @IsNotEmpty()

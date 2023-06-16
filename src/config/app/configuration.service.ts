@@ -17,4 +17,8 @@ export class AppConfigService {
   get secretKey(): string {
     return this.appConfiguration.secretTokenKey;
   }
+
+  get secretActionKey(): string {
+    return this.appConfiguration.secretActionTokenKey;
+  }
 }

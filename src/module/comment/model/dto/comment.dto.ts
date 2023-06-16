@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString, Length, ValidateNested } from 'class-validator';
 import { UserResponseDto } from '../../../user/model/dto';
 
 export class CommentDto {
-  @ApiProperty({ required: true, type: String })
+  @ApiProperty({ required: true, type: String, minLength: 5, maxLength: 100 })
   @IsNotEmpty()
   @IsString()
   @Length(5, 100)

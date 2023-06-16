@@ -1,18 +1,29 @@
 import {
+  ConflictException,
   HttpException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 import { User } from '../../core/database/entities';
 import { EDbField, EDynamicallyAction } from '../../core/enum';
 import { UserMapper } from '../../core/mapper';
 import { TokenService } from '../token';
+import { EActionToken } from '../token/model/enum';
 import { ITokenPair, ITokenPayload } from '../token/model/interface';
 import { UserResponseDto } from '../user/model/dto';
 import { UserRepository } from '../user/user.repository';
-import { AccessResponseDto, LoginDto } from './model/dto';
+import {
+  AccessResponseDto,
+  ActivateDto,
+  LoginDto,
+  RegisterDto,
+} from './model/dto';
 import { PasswordService } from './password.service';
 
 @Injectable()
@@ -24,8 +35,8 @@ export class AuthService {
     private readonly userMapper: UserMapper,
   ) {}
 
-  public async validateToken(token): Promise<User> {
-    const payload = (await this.tokenService.verifyToken(
+  public async validateAuthToken(token): Promise<User> {
+    const payload = (await this.tokenService.verifyAuthToken(
       token,
     )) as ITokenPayload;
 
@@ -61,11 +72,13 @@ export class AuthService {
   }
 
   public async login(credentials: LoginDto): Promise<AccessResponseDto> {
-    const userFromDb = await this.checkIsUserExist(
-      EDynamicallyAction.NEXT,
-      credentials.email,
-      EDbField.EMAIL,
-    );
+    const userFromDb = await this.userRepository.findOne({
+      where: { email: credentials.email, is_active: true },
+    });
+
+    if (!userFromDb) {
+      throw new NotFoundException('User not found');
+    }
 
     await this.passwordService.compare(
       credentials.password,
@@ -77,11 +90,16 @@ export class AuthService {
       role: userFromDb.role,
     });
 
+    console.log(dayjs().utc().toDate());
+    await this.userRepository.update(userFromDb.id, {
+      last_login: dayjs().utc().toDate(),
+    });
+
     return { ...tokenPair, manager: this.userFromMapper(userFromDb) };
   }
 
   public async refresh(token): Promise<ITokenPair> {
-    const userFromDb = await this.validateToken(token);
+    const userFromDb = await this.validateAuthToken(token);
 
     const tokenFromDb = await this.tokenService.findByRefreshToken(token);
 
@@ -97,5 +115,63 @@ export class AuthService {
 
   public userFromMapper(manager: User): UserResponseDto {
     return this.userMapper.toResponse(manager);
+  }
+
+  public async register(userDate: RegisterDto): Promise<UserResponseDto> {
+    await this.checkIsUserExist(
+      EDynamicallyAction.THROW,
+      userDate.email,
+      EDbField.EMAIL,
+    );
+
+    const createdUser = await this.userRepository.createUser(userDate);
+
+    return this.userFromMapper(createdUser);
+  }
+
+  public async createActivateToken(userId: number): Promise<string> {
+    const userFromDb = await this.checkIsUserExist(
+      EDynamicallyAction.NEXT,
+      userId,
+      EDbField.ID,
+    );
+
+    if (userFromDb.is_active)
+      throw new ConflictException('User is already activated');
+
+    return await this.tokenService.createActivateToken({
+      userId,
+      role: userFromDb.role,
+    });
+  }
+
+  public async activateUser(
+    token: string,
+    userDate: ActivateDto,
+  ): Promise<UserResponseDto> {
+    const { userId } = await this.tokenService.findByActionToken(
+      token,
+      EActionToken.ACTIVATE,
+    );
+
+    await this.tokenService.verifyActionToken(token);
+
+    await this.checkIsUserExist(EDynamicallyAction.NEXT, userId, EDbField.ID);
+
+    const hashedPassword = await this.passwordService.hash(userDate.password);
+
+    await Promise.all([
+      this.userRepository.update(userId, {
+        is_active: true,
+        password: hashedPassword,
+      }),
+      this.tokenService.deleteActionToken(token),
+    ]);
+
+    const updatedUser = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    return this.userMapper.toResponse(updatedUser);
   }
 }

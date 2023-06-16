@@ -1,17 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Between, ILike, LessThan, MoreThan } from 'typeorm';
+import { Between, LessThan, MoreThan } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
-import { ESort } from '../../core/enum';
 import { AnotherManagerException } from '../../core/exception';
 import { GroupRepository } from '../group/group.repository';
-import { OrderDto, QueryDto } from './model/dto';
+import { PageService } from '../page';
+import { IPageOptions, IPagePagination } from '../page/model/interface';
+import { OrderDto } from './model/dto';
 import { EStatus } from './model/enum';
-import { IOrderByQuery } from './model/interface';
-import {
-  IPaginationPage,
-  IParameterSearch,
-} from './model/interface/page.interface';
+import { IOrder, IOrderQueriesData } from './model/interface';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -19,75 +16,48 @@ export class OrderService {
   constructor(
     private readonly orderRepository: OrderRepository,
     private readonly groupRepository: GroupRepository,
+    private readonly pageService: PageService,
   ) {}
-  private generateParameter(orderOptions: IOrderByQuery): IParameterSearch {
-    const {
-      manager,
-      sort,
-      page,
-      take,
-      end_course,
-      start_course,
-      ...orderDate
-    } = orderOptions;
 
-    const skip = take * (page - 1);
-    let typeSort = ESort.DESC;
-    let orderBy = 'id';
-    let createdAt;
-
-    if (sort) {
-      const isMinus = sort.charAt(0) === '-';
-      typeSort = isMinus ? ESort.DESC : ESort.ASC;
-      orderBy = isMinus ? sort.slice(1, sort.length) : sort;
-    }
-
-    for (const key in orderDate) {
-      orderDate[key] = ILike(`%${orderDate[key]}%`);
-    }
-
-    if (end_course && start_course) {
-      createdAt = Between(start_course, end_course);
-    } else if (end_course) {
-      createdAt = LessThan(end_course);
-    } else if (start_course) {
-      createdAt = MoreThan(start_course);
-    }
-
-    return {
-      take,
-      skip,
-      orderBy,
-      typeSort,
-      whereField: { ...orderDate, createdAt, manager },
-    };
-  }
-
-  public async getAllByQuery(
-    queries: QueryDto,
+  public async getAllWithPagination(
+    pageOptions: IPageOptions,
+    orderData: IOrderQueriesData,
     manager: User,
-    take = 25,
-  ): Promise<IPaginationPage<Orders[]>> {
-    manager = queries.manager ? manager : undefined;
+  ): Promise<IPagePagination<Orders[]>> {
+    manager = orderData.manager ? manager : undefined;
 
-    const parameter = this.generateParameter({
-      ...queries,
-      manager,
-      take,
+    const { typeSort, sortBy } = this.pageService.sortByField(pageOptions.sort);
+
+    const convertedData = this.pageService.convertFieldsToILikePattern(
+      orderData.restData,
+    ) as IOrder;
+
+    let createdAt;
+    if (orderData.end_course && orderData.start_course) {
+      createdAt = Between(orderData.start_course, orderData.end_course);
+    } else if (orderData.end_course) {
+      createdAt = LessThan(orderData.end_course);
+    } else if (orderData.start_course) {
+      createdAt = MoreThan(orderData.start_course);
+    }
+
+    const [orders, totalCount] = await this.orderRepository.getAllByQuery({
+      typeSort,
+      sortBy,
+      orderData: { id: orderData.id, manager, ...convertedData, createdAt },
+      skip: pageOptions.skip,
+      take: pageOptions.take,
     });
 
-    const [orders, totalCount] = await this.orderRepository.getAllByQuery(
-      parameter,
-    );
-
-    const pageCount = Math.ceil(totalCount / take);
-    return {
-      page: queries.page,
-      pageCount,
-      itemsCount: orders.length,
+    const pagination = this.pageService.returnWithPagination({
+      page: pageOptions.page,
+      take: pageOptions.take,
+      itemCount: orders.length,
       totalCount,
-      nextPage: queries.page < pageCount,
-      perPage: queries.page > 1,
+    });
+
+    return {
+      ...pagination,
       data: orders,
     };
   }

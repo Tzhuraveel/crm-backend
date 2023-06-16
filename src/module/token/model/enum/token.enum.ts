@@ -1,4 +1,3 @@
-export enum ETokenType {
-  accessToken = 'accessToken',
-  REFRESH = 'refreshToken',
+export enum EActionToken {
+  ACTIVATE = 'activate',
 }

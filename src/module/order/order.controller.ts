@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -12,16 +13,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBody,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 
 import { Orders } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
+import { IPageOptions, IPagePagination } from '../page/model/interface';
+import { UserResponseDto } from '../user/model/dto';
 import { OrderDto, OrderResponseDto, QueryDto } from './model/dto';
-import { IPaginationPage } from './model/interface/page.interface';
+import { IOrderQueriesData } from './model/interface';
 import { OrderService } from './order.service';
 
 @ApiTags('orders')
@@ -40,9 +44,33 @@ export class OrderController {
   private async getAllByQuery(
     @Req() req,
     @Res() res,
-    @Query() queries: QueryDto,
-  ): Promise<IPaginationPage<Orders[]>> {
-    const orders = await this.orderService.getAllByQuery(queries, req.user);
+    @Query() pageOptions: QueryDto,
+  ): Promise<IPagePagination<UserResponseDto[]>> {
+    const {
+      page,
+      take,
+      skip,
+      sort,
+      id,
+      manager,
+      start_course,
+      end_course,
+      ...restData
+    } = pageOptions;
+    const pageData = { page, take, skip, sort } as IPageOptions;
+    const orderData = {
+      id,
+      manager,
+      start_course,
+      end_course,
+      restData,
+    } as IOrderQueriesData;
+
+    const orders = await this.orderService.getAllWithPagination(
+      pageData,
+      orderData,
+      req.user,
+    );
 
     return res.status(HttpStatus.OK).json(orders);
   }
@@ -53,11 +81,12 @@ export class OrderController {
       'Update order. Only the manager processing this order can change the order details',
     summary: 'update order',
   })
-  @ApiParam({
+  @ApiQuery({
     required: true,
     name: 'orderId',
     description: 'The id of the order to be changed',
   })
+  @ApiBody({ type: OrderDto })
   @Patch(':orderId')
   private async update(
     @Res() res,
@@ -65,8 +94,12 @@ export class OrderController {
     @Param('orderId', ParseIntPipe) orderId: number,
     @Body()
     body: OrderDto,
-  ): Promise<IPaginationPage<Orders>> {
-    const orders = await this.orderService.update(body, req.user, orderId);
+  ): Promise<IPagePagination<Orders>> {
+    if (Object.values(body).length === 0) {
+      throw new BadRequestException('Not provider data to update the order');
+    }
+
+    const orders = await this.orderService.update(body, req.user, +orderId);
 
     return res.status(HttpStatus.OK).json(orders);
   }

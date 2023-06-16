@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOperation,
@@ -29,6 +30,7 @@ export class CommentController {
 
   @UseGuards(BearerGuard)
   @Post(':orderId')
+  @ApiBody({ type: CommentDto })
   @ApiParam({
     required: true,
     name: 'orderId',

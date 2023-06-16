@@ -28,14 +28,14 @@ export class OrderRepository extends Repository<Orders> {
   }
 
   public async getAllByQuery(
-    parameterSearch: IParameterSearch,
+    data: IParameterSearch,
   ): Promise<[Orders[], number]> {
     return await this.findAndCount({
-      where: parameterSearch.whereField,
-      take: parameterSearch.take,
-      skip: parameterSearch.skip,
+      where: data.orderData,
+      take: data.take,
+      skip: data.skip,
       order: {
-        [parameterSearch.orderBy]: parameterSearch.typeSort,
+        [data.sortBy]: data.typeSort,
       },
       relations: ['manager', 'group', 'comment', 'comment.manager'],
       select: selectedRelative,
