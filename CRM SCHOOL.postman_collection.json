@@ -151,6 +151,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "activate user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"234Fsfe3#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/auth/activate/{{actionToken}}",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"auth",
+								"activate",
+								"{{actionToken}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -185,7 +216,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/orders?manager=3",
+							"raw": "{{apiNest}}/orders?manager=true",
 							"host": [
 								"{{apiNest}}"
 							],
@@ -195,7 +226,7 @@
 							"query": [
 								{
 									"key": "manager",
-									"value": "3"
+									"value": "true"
 								}
 							]
 						}
@@ -219,7 +250,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Roman\",\r\n    \"course\": \"JCX\",\r\n    \"sum\": 234,\r\n    \"age\": 34, \r\n    \"alreadyPaid\":400,\r\n    \"status\": \"agree\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Stepan\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -227,13 +258,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/orders/500",
+							"raw": "{{apiNest}}/orders/497",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"orders",
-								"500"
+								"497"
 							]
 						}
 					},
@@ -261,7 +292,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"march-2022\"\r\n}",
+							"raw": "{\r\n    \"name\": \"2323\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -327,13 +358,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{apiNest}}/groups/2",
+							"raw": "{{apiNest}}/groups/6",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"groups",
-								"2"
+								"6"
 							]
 						}
 					},
@@ -369,13 +400,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/comments/500",
+							"raw": "{{apiNest}}/comments/499",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"comments",
-								"500"
+								"499"
 							]
 						}
 					},
@@ -397,13 +428,130 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{apiNest}}/comments/36",
+							"raw": "{{apiNest}}/comments/45",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"comments",
-								"36"
+								"45"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": []
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "register manager",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Timofii\",\r\n    \"surname\": \"Zhuravel\",\r\n    \"email\": \"zhuravel@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/admin/register-manager",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"register-manager"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all managers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/all-managers",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"all-managers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activate token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonBody = JSON.parse(responseBody);\r",
+									"console.log(jsonBody)\r",
+									"pm.environment.set(\"actionToken\", jsonBody)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/activate-token/10",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"activate-token",
+								"10"
 							]
 						}
 					},
