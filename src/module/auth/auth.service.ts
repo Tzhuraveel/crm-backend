@@ -12,10 +12,10 @@ dayjs.extend(utc);
 
 import { User } from '../../core/database/entities';
 import { EDbField, EDynamicallyAction } from '../../core/enum';
-import { UserMapper } from '../../core/mapper';
 import { TokenService } from '../token';
 import { EActionToken } from '../token/model/enum';
 import { ITokenPair, ITokenPayload } from '../token/model/interface';
+import { UserMapper } from '../user';
 import { UserResponseDto } from '../user/model/dto';
 import { UserRepository } from '../user/user.repository';
 import {

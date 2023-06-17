@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 
@@ -39,24 +39,4 @@ export class PageOptionsDto {
   @IsString()
   @Length(1, 100)
   sort?: string;
-}
-
-export class PageResponseDto {
-  @ApiProperty({ example: 1, type: Number })
-  page: number;
-
-  @ApiProperty({ example: true, type: Boolean })
-  perPage: boolean;
-
-  @ApiProperty({ example: true, type: Boolean })
-  nextPage: boolean;
-
-  @ApiProperty({ example: 25, type: Number })
-  itemsCount: number;
-
-  @ApiProperty({ example: 500, type: Number })
-  totalCount: number;
-
-  @ApiProperty({ example: 20, type: Number })
-  pageCount: number;
 }

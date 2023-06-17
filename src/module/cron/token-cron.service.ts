@@ -11,7 +11,7 @@ dayjs.extend(utc);
 export class TokenCronService {
   constructor(private readonly tokenService: TokenService) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   private async removeExpiredToken() {
     const minutes = dayjs()
       .utc()
@@ -22,7 +22,7 @@ export class TokenCronService {
     await this.tokenService.deleteManyTokenByDate(minutes);
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   private async removeExpiredActionToken() {
     const minutes = dayjs()
       .utc()

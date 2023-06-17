@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from '../../core/database/entities';
 import { AnotherManagerException } from '../../core/exception';
-import { CommentMapper } from '../../core/mapper';
 import { OrderRepository } from '../order';
-import { EStatus } from '../order/model/enum/course.enum';
+import { EStatus } from '../order/model/enum';
+import { CommentMapper } from './comment.mapper';
 import { CommentRepository } from './comment.repository';
 import { CommentResponseDto } from './model/dto';
 

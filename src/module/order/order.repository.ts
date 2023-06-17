@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
-import { OrderDto } from './model/dto';
+import { OrderUpdateDto } from './model/dto';
 import { IParameterSearch } from './model/interface/page.interface';
 
 const managerField = {
@@ -53,7 +53,7 @@ export class OrderRepository extends Repository<Orders> {
 
   public async updateOrder(
     orderId: number,
-    orderData: Omit<OrderDto, 'group'>,
+    orderData: Omit<OrderUpdateDto, 'group'>,
     group: Group,
     manager: User | undefined | null,
   ): Promise<Orders> {

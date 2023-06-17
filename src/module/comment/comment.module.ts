@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { CommentMapper } from '../../core/mapper';
 import { OrderRepository } from '../order';
 import { CommentController } from './comment.controller';
+import { CommentMapper } from './comment.mapper';
 import { CommentRepository } from './comment.repository';
 import { CommentService } from './comment.service';
 

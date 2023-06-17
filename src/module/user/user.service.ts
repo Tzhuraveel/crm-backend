@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserMapper } from '../../core/mapper';
 import { PageService } from '../page';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
 import { UserResponseDto } from './model/dto';
 import { EUserRole } from './model/enum';
 import { IUserData, IUserQueriesData } from './model/interface';
+import { UserMapper } from './user.mapper';
 import { UserRepository } from './user.repository';
 
 @Injectable()

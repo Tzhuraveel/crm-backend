@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { CommentResponseDto } from '../../module/comment/model/dto';
-import { Comment } from '../database/entities';
+import { Comment } from '../../core/database/entities';
+import { CommentResponseDto } from './model/dto';
 
 @Injectable()
 export class CommentMapper {
@@ -14,8 +14,6 @@ export class CommentMapper {
         id: manager.id,
         name: manager.name,
         surname: manager.surname,
-        is_active: manager.is_active,
-        last_login: manager.last_login,
       },
     };
   }

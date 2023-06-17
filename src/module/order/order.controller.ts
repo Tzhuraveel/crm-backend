@@ -24,7 +24,7 @@ import { Orders } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
 import { UserResponseDto } from '../user/model/dto';
-import { OrderDto, OrderResponseDto, QueryDto } from './model/dto';
+import { OrdersResponseDto, OrderUpdateDto, QueryDto } from './model/dto';
 import { IOrderQueriesData } from './model/interface';
 import { OrderService } from './order.service';
 
@@ -39,7 +39,7 @@ export class OrderController {
       'Get all orders. You can include additional filter criteria based on your specific requirements, such as age, email, etc.',
     summary: 'filter',
   })
-  @ApiOkResponse({ type: [OrderResponseDto] })
+  @ApiOkResponse({ type: [OrdersResponseDto] })
   @Get()
   private async getAllByQuery(
     @Req() req,
@@ -86,14 +86,15 @@ export class OrderController {
     name: 'orderId',
     description: 'The id of the order to be changed',
   })
-  @ApiBody({ type: OrderDto })
+  @ApiOkResponse({ type: OrdersResponseDto })
+  @ApiBody({ type: OrderUpdateDto })
   @Patch(':orderId')
   private async update(
     @Res() res,
     @Req() req,
     @Param('orderId', ParseIntPipe) orderId: number,
     @Body()
-    body: OrderDto,
+    body: OrderUpdateDto,
   ): Promise<IPagePagination<Orders>> {
     if (Object.values(body).length === 0) {
       throw new BadRequestException('Not provider data to update the order');

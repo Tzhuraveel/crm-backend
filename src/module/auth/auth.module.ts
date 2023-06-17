@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { UserMapper } from '../../core/mapper';
 import { TokenModule } from '../token';
+import { UserMapper } from '../user';
 import { UserRepository } from '../user/user.repository';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';

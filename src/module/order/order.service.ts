@@ -6,7 +6,7 @@ import { AnotherManagerException } from '../../core/exception';
 import { GroupRepository } from '../group/group.repository';
 import { PageService } from '../page';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
-import { OrderDto } from './model/dto';
+import { OrderUpdateDto } from './model/dto';
 import { EStatus } from './model/enum';
 import { IOrder, IOrderQueriesData } from './model/interface';
 import { OrderRepository } from './order.repository';
@@ -63,7 +63,7 @@ export class OrderService {
   }
 
   public async update(
-    orderData: OrderDto,
+    orderData: OrderUpdateDto,
     manager: User,
     orderId: number,
   ): Promise<Orders> {

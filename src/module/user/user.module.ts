@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { UserMapper } from '../../core/mapper';
 import { PageService } from '../page';
 import { UserController } from './user.controller';
+import { UserMapper } from './user.mapper';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
