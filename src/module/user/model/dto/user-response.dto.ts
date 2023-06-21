@@ -1,4 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
 import { OrderStatisticsResponseDto } from '../../../order/model/dto';
 import { PageResponseDto } from '../../../page/model/dto';
@@ -38,10 +40,14 @@ export class UserBriefResponseDto extends PickType(UserResponseDto, [
 
 export class UserStatisticsResponseDto extends UserResponseDto {
   @ApiProperty({ type: () => OrderStatisticsResponseDto })
+  @ValidateNested()
+  @Type(() => OrderStatisticsResponseDto)
   statistics: OrderStatisticsResponseDto;
 }
 
 export class UsersResponseDto extends PageResponseDto {
   @ApiProperty({ type: [UserStatisticsResponseDto] })
+  @ValidateNested()
+  @Type(() => UserStatisticsResponseDto)
   data: UserStatisticsResponseDto[];
 }

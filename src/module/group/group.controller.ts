@@ -5,7 +5,6 @@ import {
   Get,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Post,
   Res,
   UseGuards,
@@ -22,6 +21,7 @@ import {
 
 import { Group } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
+import { IntTransformPipe } from '../../core/validation/pipe';
 import { GroupService } from './group.service';
 import { GroupDto, GroupResponseDto } from './model/dto';
 
@@ -69,7 +69,7 @@ export class GroupController {
   @Delete(':groupId')
   private async delete(
     @Res() res,
-    @Param('groupId', ParseIntPipe) groupId: number,
+    @Param('groupId', IntTransformPipe) groupId: number,
   ) {
     await this.groupService.delete(groupId);
 

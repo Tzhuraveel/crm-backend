@@ -1,3 +1,6 @@
+import { ESort } from '../../../../core/enum';
+import { IOrder } from '../../../order/model/interface';
+
 export interface IPageParameter {
   page: number;
   take: number;
@@ -22,4 +25,12 @@ export interface IPageResponse {
 
 export interface IPagePagination<T> extends IPageResponse {
   data: T;
+}
+
+export interface IParameterSearch {
+  take: number;
+  skip: number;
+  typeSort: ESort;
+  sortBy: string;
+  orderData?: IOrder;
 }

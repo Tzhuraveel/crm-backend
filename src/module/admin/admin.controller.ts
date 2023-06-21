@@ -4,7 +4,6 @@ import {
   Get,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -24,13 +23,14 @@ import {
 import { RolesAccess } from '../../core/decorator/role.decorator';
 import { BearerGuard } from '../../core/guard';
 import { RolesGuard } from '../../core/guard/roles.guard';
-import { intTransformPipe } from '../../core/validation/pipe';
-import { AuthService } from '../auth/auth.service';
+import { IntTransformPipe } from '../../core/validation/pipe';
+import { AuthService } from '../auth';
 import { ActionTokenResponseDto, RegisterDto } from '../auth/model/dto';
-import { ManagementService } from '../management/management.service';
+import { ManagementService } from '../management';
 import { OrderService } from '../order';
 import { OrderStatisticsResponseDto } from '../order/model/dto';
 import { IPageOptions } from '../page/model/interface';
+import { UserService } from '../user';
 import {
   UserQueryDto,
   UserResponseDto,
@@ -38,7 +38,6 @@ import {
 } from '../user/model/dto';
 import { EUserRole } from '../user/model/enum';
 import { IUserQueriesData } from '../user/model/interface';
-import { UserService } from '../user/user.service';
 
 @UseGuards(BearerGuard, RolesGuard)
 @ApiTags('admin')
@@ -59,7 +58,7 @@ export class AdminController {
   @Get('/activate-token/:userId')
   private async createActivateToken(
     @Res() res,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', IntTransformPipe) userId: number,
   ): Promise<ActionTokenResponseDto> {
     const actionToken = await this.authService.createActivateToken(userId);
 
@@ -75,7 +74,7 @@ export class AdminController {
   @Get('/forgot-token/:userId')
   private async createForgotToken(
     @Res() res,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', IntTransformPipe) userId: number,
   ): Promise<ActionTokenResponseDto> {
     const actionToken = await this.authService.createForgotToken(userId);
 
@@ -100,7 +99,10 @@ export class AdminController {
   @RolesAccess(EUserRole.ADMIN)
   @ApiNoContentResponse()
   @Patch('ban-manager/:userId')
-  private async ban(@Res() res, @Param('userId', ParseIntPipe) userId: number) {
+  private async ban(
+    @Res() res,
+    @Param('userId', IntTransformPipe) userId: number,
+  ) {
     await this.managementService.ban(userId);
 
     return res.status(HttpStatus.NO_CONTENT).sendStatus(HttpStatus.NO_CONTENT);
@@ -112,7 +114,7 @@ export class AdminController {
   @Patch('unban-manager/:userId')
   private async unban(
     @Res() res,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', IntTransformPipe) userId: number,
   ) {
     await this.managementService.unban(userId);
 
@@ -166,7 +168,7 @@ export class AdminController {
   @Get('/statistic/users/:userId')
   private async userStatistics(
     @Res() res,
-    @Param('userId', intTransformPipe) userId: number,
+    @Param('userId', IntTransformPipe) userId: number,
   ): Promise<OrderStatisticsResponseDto> {
     const orderStatistics = await this.orderService.getUserStatistics(userId);
 

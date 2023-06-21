@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
+import { IParameterSearch } from '../page/model/interface';
 import { OrderUpdateDto } from './model/dto';
 import { IOrderStatus } from './model/interface';
-import { IParameterSearch } from './model/interface';
 
 const managerField = {
   id: true,

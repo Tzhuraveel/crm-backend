@@ -73,6 +73,34 @@
 					"response": []
 				},
 				{
+					"name": "me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/auth/me",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "login",
 					"event": [
 						{
@@ -125,34 +153,6 @@
 					"response": []
 				},
 				{
-					"name": "me",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{apiNest}}/auth/me",
-							"host": [
-								"{{apiNest}}"
-							],
-							"path": [
-								"auth",
-								"me"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "activate user",
 					"request": {
 						"auth": {
@@ -178,6 +178,52 @@
 								"auth",
 								"activate",
 								"{{actionToken}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "recovery password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"234Fsfe3#4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiNest}}/auth/recovery-password/{{actionToken}}",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"auth",
+								"recovery-password",
+								"{{actionToken}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/excel/generate",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"excel",
+								"generate"
 							]
 						}
 					},
@@ -250,7 +296,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Stepan\"\r\n}",
+							"raw": "{\r\n    \"status\": \"agree\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -258,13 +304,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/orders/497",
+							"raw": "{{apiNest}}/orders/499",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"orders",
-								"497"
+								"499"
 							]
 						}
 					},
@@ -522,8 +568,7 @@
 							"script": {
 								"exec": [
 									"const jsonBody = JSON.parse(responseBody);\r",
-									"console.log(jsonBody)\r",
-									"pm.environment.set(\"actionToken\", jsonBody)\r",
+									"pm.environment.set(\"actionToken\", jsonBody.actionToken)\r",
 									""
 								],
 								"type": "text/javascript"
@@ -552,6 +597,198 @@
 								"admin",
 								"activate-token",
 								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonBody = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"actionToken\", jsonBody.actionToken)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/forgot-token/9",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"forgot-token",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order statistics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/statistic/orders",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"statistic",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user statistics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/statistic/users/9",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"statistic",
+								"users",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ban user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/ban-manager/8",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"ban-manager",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unban user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/admin/unban-manager/9",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"admin",
+								"unban-manager",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "excel",
+			"item": [
+				{
+					"name": "generate excel with order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiNest}}/excel/users",
+							"host": [
+								"{{apiNest}}"
+							],
+							"path": [
+								"excel",
+								"users"
 							]
 						}
 					},

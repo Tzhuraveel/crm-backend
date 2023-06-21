@@ -6,10 +6,10 @@ import {
   AnotherManagerException,
   NotFoundEntityException,
 } from '../../core/exception';
-import { GroupRepository } from '../group/group.repository';
+import { GroupRepository } from '../group';
 import { PageService } from '../page';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
-import { UserRepository } from '../user/user.repository';
+import { UserRepository } from '../user';
 import { OrderUpdateDto } from './model/dto';
 import { EStatus } from './model/enum';
 import { IOrder, IOrderQueriesData, IOrderStatistics } from './model/interface';

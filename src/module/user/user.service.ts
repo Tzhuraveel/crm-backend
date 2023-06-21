@@ -2,8 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { OrderService } from '../order';
 import { PageService } from '../page';
-import { IPageOptions, IPagePagination } from '../page/model/interface';
-import { UsersResponseDto } from './model/dto';
+import {
+  IPageOptions,
+  IPagePagination,
+  IPageResponse,
+} from '../page/model/interface';
+import { UserStatisticsResponseDto } from './model/dto';
 import { EUserRole } from './model/enum';
 import { IUserData, IUserQueriesData } from './model/interface';
 import { UserMapper } from './user.mapper';
@@ -21,7 +25,7 @@ export class UserService {
   public async getAllWithPagination(
     pageOptions: IPageOptions,
     userData: IUserQueriesData,
-  ): Promise<IPagePagination<UsersResponseDto>> {
+  ): Promise<IPagePagination<UserStatisticsResponseDto[]>> {
     const { typeSort, sortBy } = this.pageService.sortByField(pageOptions.sort);
 
     const convertedData = this.pageService.convertFieldsToILikePattern(
@@ -40,17 +44,20 @@ export class UserService {
 
     const users = this.userMapper.toManyResponse(usersFromDb);
 
-    const usersWithStatistics = await Promise.all(
+    const usersWithStatistics: UserStatisticsResponseDto[] = await Promise.all(
       users.map(async (user) => {
         const userStatistics = await this.orderService.getUserStatistics(
           user.id,
         );
 
-        return { ...user, statistics: userStatistics };
+        return {
+          ...user,
+          statistics: userStatistics,
+        } as UserStatisticsResponseDto;
       }),
     );
 
-    const pagination = this.pageService.returnWithPagination({
+    const pagination: IPageResponse = this.pageService.returnWithPagination({
       page: pageOptions.page,
       take: pageOptions.take,
       itemCount: usersFromDb.length,
