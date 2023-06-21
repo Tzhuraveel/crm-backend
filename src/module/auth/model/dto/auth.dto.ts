@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
@@ -7,12 +6,10 @@ import {
   Length,
   Matches,
   Validate,
-  ValidateNested,
 } from 'class-validator';
 
 import { regexExpression } from '../../../../core/constant/regex';
 import { TrimDecorator } from '../../../../core/validation/decorator';
-import { UserResponseDto } from '../../../user/model/dto';
 
 export class LoginDto {
   @ApiProperty({
@@ -41,7 +38,7 @@ export class LoginDto {
   password: string;
 }
 
-export class ActivateDto {
+export class PasswordDto {
   @ApiProperty({
     required: true,
     pattern: `${regexExpression.PASSWORD}`,
@@ -86,36 +83,4 @@ export class RegisterDto {
   @Matches(regexExpression.EMAIL)
   @IsOptional()
   email: string;
-}
-
-export class ActionTokenResponseDto {
-  @ApiProperty({
-    type: String,
-    example:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTYzNzA4OCwiZXhwIjoxNjg1NjQwNjg4fQ.ivFlUGcmNDB5SErHqkGG6DM1ig6Hj4hYnk11PWcQ-Ls',
-  })
-  actionToken: string;
-}
-
-export class TokenResponseDto {
-  @ApiProperty({
-    type: String,
-    example:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTYzNzA4OCwiZXhwIjoxNjg1NjQwNjg4fQ.ivFlUGcmNDB5SErHqkGG6DM1ig6Hj4hYnk11PWcQ-Ls',
-  })
-  accessToken: string;
-
-  @ApiProperty({
-    type: String,
-    example:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NTYzNzA4OCwiZXhwIjoxNjg1NjQwNjg4fQ.ivFlUGcmNDB5SErHqkGG6DM1ig6Hj4hYnk11PWcQ-Ls',
-  })
-  refreshToken: string;
-}
-
-export class AccessResponseDto extends TokenResponseDto {
-  @ApiProperty()
-  @ValidateNested()
-  @Type(() => UserResponseDto)
-  manager: UserResponseDto;
 }

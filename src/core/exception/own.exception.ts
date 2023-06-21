@@ -8,3 +8,9 @@ export class AnotherManagerException extends HttpException {
     );
   }
 }
+
+export class NotFoundEntityException extends HttpException {
+  constructor(private entity) {
+    super(`${entity} not found`, HttpStatus.NOT_FOUND);
+  }
+}

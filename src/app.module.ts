@@ -11,7 +11,9 @@ import { AdminModule } from './module/admin';
 import { AuthModule } from './module/auth';
 import { CommentModule } from './module/comment';
 import { CronModule } from './module/cron';
+import { ExcelModule } from './module/excel';
 import { GroupModule } from './module/group';
+import { ManagementModule } from './module/management';
 import { OrderModule } from './module/order';
 import { TokenModule } from './module/token';
 import { UserModule } from './module/user';
@@ -30,6 +32,8 @@ import { UserModule } from './module/user';
     GroupModule,
     CommentModule,
     AdminModule,
+    ManagementModule,
+    ExcelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

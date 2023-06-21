@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
+import { OrderService } from '../order';
 import { PageService } from '../page';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
-import { UserResponseDto } from './model/dto';
+import { UsersResponseDto } from './model/dto';
 import { EUserRole } from './model/enum';
 import { IUserData, IUserQueriesData } from './model/interface';
 import { UserMapper } from './user.mapper';
@@ -12,6 +13,7 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly orderService: OrderService,
     private readonly userMapper: UserMapper,
     private readonly pageService: PageService,
   ) {}
@@ -19,7 +21,7 @@ export class UserService {
   public async getAllWithPagination(
     pageOptions: IPageOptions,
     userData: IUserQueriesData,
-  ): Promise<IPagePagination<UserResponseDto[]>> {
+  ): Promise<IPagePagination<UsersResponseDto>> {
     const { typeSort, sortBy } = this.pageService.sortByField(pageOptions.sort);
 
     const convertedData = this.pageService.convertFieldsToILikePattern(
@@ -38,6 +40,16 @@ export class UserService {
 
     const users = this.userMapper.toManyResponse(usersFromDb);
 
+    const usersWithStatistics = await Promise.all(
+      users.map(async (user) => {
+        const userStatistics = await this.orderService.getUserStatistics(
+          user.id,
+        );
+
+        return { ...user, statistics: userStatistics };
+      }),
+    );
+
     const pagination = this.pageService.returnWithPagination({
       page: pageOptions.page,
       take: pageOptions.take,
@@ -45,6 +57,6 @@ export class UserService {
       totalCount,
     });
 
-    return { ...pagination, data: users };
+    return { ...pagination, data: usersWithStatistics };
   }
 }

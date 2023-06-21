@@ -10,7 +10,13 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { User } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
@@ -18,8 +24,8 @@ import { UserResponseDto } from '../user/model/dto';
 import { AuthService } from './auth.service';
 import {
   AccessResponseDto,
-  ActivateDto,
   LoginDto,
+  PasswordDto,
   TokenResponseDto,
 } from './model/dto';
 
@@ -84,16 +90,33 @@ export class AuthController {
     description: 'Activate the user with an action token',
     summary: 'activate user',
   })
-  @ApiBody({ required: true, type: ActivateDto })
+  @ApiBody({ required: true, type: PasswordDto })
   @ApiOkResponse({ type: UserResponseDto })
   @Post('/activate/:token')
   private async activateUser(
     @Res() res,
-    @Body() body: ActivateDto,
+    @Body() body: PasswordDto,
     @Param('token') token: string,
   ): Promise<UserResponseDto> {
     const createdUser = await this.authService.activateUser(token, body);
 
     return res.status(HttpStatus.CREATED).json(createdUser);
+  }
+
+  @ApiOperation({
+    description: 'Recovery password with an action token',
+    summary: 'recovery password',
+  })
+  @ApiBody({ required: true, type: PasswordDto })
+  @ApiNoContentResponse()
+  @Post('/recovery-password/:token')
+  private async recoveryPassword(
+    @Res() res,
+    @Param('token') token: string,
+    @Body() body: PasswordDto,
+  ): Promise<UserResponseDto> {
+    await this.authService.recoveryPassword(token, body);
+
+    return res.status(HttpStatus.NO_CONTENT).sendStatus(HttpStatus.NO_CONTENT);
   }
 }

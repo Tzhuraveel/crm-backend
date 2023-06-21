@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   HttpException,
   Injectable,
   NotFoundException,
@@ -7,8 +8,6 @@ import {
 } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
-
-dayjs.extend(utc);
 
 import { User } from '../../core/database/entities';
 import { EDbField, EDynamicallyAction } from '../../core/enum';
@@ -20,11 +19,13 @@ import { UserResponseDto } from '../user/model/dto';
 import { UserRepository } from '../user/user.repository';
 import {
   AccessResponseDto,
-  ActivateDto,
   LoginDto,
+  PasswordDto,
   RegisterDto,
 } from './model/dto';
 import { PasswordService } from './password.service';
+
+dayjs.extend(utc);
 
 @Injectable()
 export class AuthService {
@@ -76,8 +77,12 @@ export class AuthService {
       where: { email: credentials.email, is_active: true },
     });
 
-    if (!userFromDb) {
-      throw new NotFoundException('User not found');
+    if (!userFromDb) throw new NotFoundException('User not found');
+
+    if (userFromDb.is_banned) {
+      throw new ForbiddenException(
+        'Your account is banned. Contact to admin to find out the reason your ban',
+      );
     }
 
     await this.passwordService.compare(
@@ -90,7 +95,6 @@ export class AuthService {
       role: userFromDb.role,
     });
 
-    console.log(dayjs().utc().toDate());
     await this.userRepository.update(userFromDb.id, {
       last_login: dayjs().utc().toDate(),
     });
@@ -145,16 +149,29 @@ export class AuthService {
     });
   }
 
+  public async createForgotToken(userId: number): Promise<string> {
+    const userFromDb = await this.checkIsUserExist(
+      EDynamicallyAction.NEXT,
+      userId,
+      EDbField.ID,
+    );
+
+    return await this.tokenService.createForgotToken({
+      userId,
+      role: userFromDb.role,
+    });
+  }
+
   public async activateUser(
     token: string,
-    userDate: ActivateDto,
+    userDate: PasswordDto,
   ): Promise<UserResponseDto> {
     const { userId } = await this.tokenService.findByActionToken(
       token,
       EActionToken.ACTIVATE,
     );
 
-    await this.tokenService.verifyActionToken(token);
+    await this.tokenService.verifyActionToken(token, EActionToken.ACTIVATE);
 
     await this.checkIsUserExist(EDynamicallyAction.NEXT, userId, EDbField.ID);
 
@@ -173,5 +190,28 @@ export class AuthService {
     });
 
     return this.userMapper.toResponse(updatedUser);
+  }
+
+  public async recoveryPassword(
+    token: string,
+    userDate: PasswordDto,
+  ): Promise<void> {
+    const { userId } = await this.tokenService.findByActionToken(
+      token,
+      EActionToken.FORGOT,
+    );
+
+    await this.tokenService.verifyActionToken(token, EActionToken.FORGOT);
+
+    await this.checkIsUserExist(EDynamicallyAction.NEXT, userId, EDbField.ID);
+
+    const hashedPassword = await this.passwordService.hash(userDate.password);
+
+    await Promise.all([
+      this.userRepository.update(userId, {
+        password: hashedPassword,
+      }),
+      this.tokenService.deleteActionToken(token),
+    ]);
   }
 }

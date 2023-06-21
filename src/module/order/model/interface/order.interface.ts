@@ -14,15 +14,6 @@ interface IOrderDetails {
   status?: EStatus;
 }
 
-export interface IOrderByQuery extends IOrderDetails {
-  id?: number;
-  take: number;
-  page?: number;
-  sort?: string;
-  start_course?: Date;
-  end_course?: Date;
-}
-
 export interface IOrder extends IOrderDetails {
   id?: number;
   createdAt: Date;
@@ -34,4 +25,31 @@ export interface IOrderQueriesData {
   end_course?: Date;
   manager?: boolean;
   restData: IOrderDetails;
+}
+
+export interface IOrderStatus {
+  status: EStatus;
+  count: string;
+}
+
+export interface IOrderStatistics {
+  total: number;
+  statuses: IOrderStatus[];
+}
+
+export interface IOrderExcel {
+  id: number;
+  name: string;
+  surname: string;
+  phone: string;
+  age: number;
+  course: ECourse;
+  course_format: ECourseFormat;
+  course_type: ECourseType;
+  status: EStatus;
+  sum: number;
+  alreadyPaid: number;
+  group: string;
+  created_at: Date;
+  manager: string;
 }

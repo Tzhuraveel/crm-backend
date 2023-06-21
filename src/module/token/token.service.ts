@@ -32,9 +32,23 @@ export class TokenService {
     return payload;
   }
 
-  public async verifyActionToken(token): Promise<ITokenPayload> {
+  public async verifyActionToken(
+    token,
+    typeToken: EActionToken,
+  ): Promise<ITokenPayload> {
+    let secret;
+
+    switch (typeToken) {
+      case EActionToken.ACTIVATE:
+        secret = this.appConfigService.secretActionActivateKey;
+        break;
+      case EActionToken.FORGOT:
+        secret = this.appConfigService.secretActionForgotKey;
+        break;
+    }
+
     const payload = (await this.jwtService.verifyAsync(token, {
-      secret: this.appConfigService.secretActionKey,
+      secret,
     })) as ITokenPayload;
 
     if (!payload)
@@ -60,7 +74,7 @@ export class TokenService {
 
   public async createActivateToken(payload: ITokenPayload): Promise<string> {
     const activateToken = await this.jwtService.signAsync(payload, {
-      secret: this.appConfigService.secretActionKey,
+      secret: this.appConfigService.secretActionActivateKey,
       expiresIn: '10m',
     });
 
@@ -71,6 +85,21 @@ export class TokenService {
     });
 
     return activateToken;
+  }
+
+  public async createForgotToken(payload: ITokenPayload): Promise<string> {
+    const forgotToken = await this.jwtService.signAsync(payload, {
+      secret: this.appConfigService.secretActionForgotKey,
+      expiresIn: '10m',
+    });
+
+    await this.actionTokenRepository.save({
+      typeToken: EActionToken.FORGOT,
+      userId: payload.userId,
+      actionToken: forgotToken,
+    });
+
+    return forgotToken;
   }
 
   public async findByRefreshToken(token): Promise<Token> {
@@ -98,6 +127,8 @@ export class TokenService {
     const actionTokenFromDb = await this.actionTokenRepository.findOne({
       where: { actionToken: token, typeToken },
     });
+
+    console.log(actionTokenFromDb);
 
     if (!actionTokenFromDb)
       throw new NotFoundException('Token deleted or expired');

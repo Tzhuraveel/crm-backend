@@ -1,2 +1,2 @@
 export * from './http-exception.filter';
-export * from './order.exception';
+export * from './own.exception';

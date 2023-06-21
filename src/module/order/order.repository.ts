@@ -3,7 +3,8 @@ import { DataSource, Repository } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
 import { OrderUpdateDto } from './model/dto';
-import { IParameterSearch } from './model/interface/page.interface';
+import { IOrderStatus } from './model/interface';
+import { IParameterSearch } from './model/interface';
 
 const managerField = {
   id: true,
@@ -39,6 +40,36 @@ export class OrderRepository extends Repository<Orders> {
       },
       relations: ['manager', 'group', 'comment', 'comment.manager'],
       select: selectedRelative,
+    });
+  }
+
+  public async getOrderStatistic(): Promise<IOrderStatus[]> {
+    return this.createQueryBuilder()
+      .select('COUNT(*)', 'count')
+      .addSelect('status')
+      .groupBy('status')
+      .getRawMany();
+  }
+
+  public async getOrderStatisticById(userId: number): Promise<IOrderStatus[]> {
+    return this.createQueryBuilder()
+      .select('COUNT(*)', 'count')
+      .where('manager = :manager', { manager: userId })
+      .addSelect('status')
+      .groupBy('status')
+      .getRawMany();
+  }
+
+  public async getAllForExcel(data: IParameterSearch): Promise<Orders[]> {
+    return await this.find({
+      where: data.orderData,
+      take: data.take,
+      skip: data.skip,
+      order: {
+        [data.sortBy]: data.typeSort,
+      },
+      relations: ['manager', 'group'],
+      select: { manager: { name: true }, group: { name: true } },
     });
   }
 

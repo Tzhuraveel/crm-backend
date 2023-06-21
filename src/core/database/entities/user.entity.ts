@@ -43,6 +43,10 @@ export class User {
   @IsNotEmpty()
   name: string;
 
+  @Column({ type: 'boolean', default: false, nullable: true })
+  @IsBoolean()
+  is_banned: boolean;
+
   @Column({ type: 'varchar', length: 100 })
   @IsString()
   surname: string;

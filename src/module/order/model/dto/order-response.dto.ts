@@ -77,3 +77,19 @@ export class OrdersResponseDto extends PageResponseDto {
   @Type(() => CommentResponseDto)
   comment: [CommentResponseDto];
 }
+
+class StatisticsDto {
+  @ApiProperty({ type: String, example: 1 })
+  count: string;
+
+  @ApiProperty({ enum: EStatus, example: EStatus.AGREE })
+  status: EStatus;
+}
+
+export class OrderStatisticsResponseDto {
+  @ApiProperty({ type: Number, example: 500 })
+  total: number;
+
+  @ApiProperty({ type: [StatisticsDto] })
+  statuses: [StatisticsDto];
+}
