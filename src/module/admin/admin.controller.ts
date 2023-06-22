@@ -158,20 +158,4 @@ export class AdminController {
 
     return res.status(HttpStatus.OK).json(orderStatistics);
   }
-
-  @ApiOperation({
-    description: 'Get user statistics',
-    summary: 'user statistics',
-  })
-  @RolesAccess(EUserRole.ADMIN)
-  @ApiOkResponse({ type: OrderStatisticsResponseDto })
-  @Get('/statistic/users/:userId')
-  private async userStatistics(
-    @Res() res,
-    @Param('userId', IntTransformPipe) userId: number,
-  ): Promise<OrderStatisticsResponseDto> {
-    const orderStatistics = await this.orderService.getUserStatistics(userId);
-
-    return res.status(HttpStatus.OK).json(orderStatistics);
-  }
 }

@@ -2,14 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Between, LessThan, MoreThan } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
+import { EDbField, EDynamicallyAction } from '../../core/enum';
 import {
   AnotherManagerException,
   NotFoundEntityException,
 } from '../../core/exception';
-import { GroupRepository } from '../group';
+import { AuthService } from '../auth';
+import { GroupRepository } from '../group/group.repository';
 import { PageService } from '../page';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
-import { UserRepository } from '../user';
 import { OrderUpdateDto } from './model/dto';
 import { EStatus } from './model/enum';
 import { IOrder, IOrderQueriesData, IOrderStatistics } from './model/interface';
@@ -18,7 +19,7 @@ import { OrderRepository } from './order.repository';
 @Injectable()
 export class OrderService {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authService: AuthService,
     private readonly orderRepository: OrderRepository,
     private readonly groupRepository: GroupRepository,
     private readonly pageService: PageService,
@@ -150,7 +151,11 @@ export class OrderService {
   }
 
   public async getUserStatistics(userId: number): Promise<IOrderStatistics> {
-    const userFromDb = await this.userRepository.findOneBy({ id: userId });
+    const userFromDb = await this.authService.checkIsUserExist(
+      EDynamicallyAction.NEXT,
+      userId,
+      EDbField.ID,
+    );
 
     if (!userFromDb) {
       throw new NotFoundEntityException('User');

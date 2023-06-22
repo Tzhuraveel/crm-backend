@@ -62,9 +62,7 @@ export class OrdersResponseDto extends PageResponseDto {
   @ApiProperty({ type: Number, example: 6000, minimum: 1 })
   alreadyPaid?: number;
 
-  @ApiProperty({ type: UserBriefResponseDto })
-  @ValidateNested()
-  @Type(() => UserBriefResponseDto)
+  @ApiProperty({ type: () => UserBriefResponseDto })
   manager: UserBriefResponseDto;
 
   @ApiProperty({ type: GroupResponseDto })

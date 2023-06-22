@@ -14,8 +14,8 @@ import { EDbField, EDynamicallyAction } from '../../core/enum';
 import { TokenService } from '../token';
 import { EActionToken } from '../token/model/enum';
 import { ITokenPair, ITokenPayload } from '../token/model/interface';
-import { UserMapper } from '../user';
 import { UserResponseDto } from '../user/model/dto';
+import { UserMapper } from '../user/user.mapper';
 import { UserRepository } from '../user/user.repository';
 import {
   AccessResponseDto,

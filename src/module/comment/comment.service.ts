@@ -2,12 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from '../../core/database/entities';
 import { AnotherManagerException } from '../../core/exception';
-import { OrderRepository } from '../order';
 import { EStatus } from '../order/model/enum';
+import { OrderRepository } from '../order/order.repository';
 import { CommentMapper } from './comment.mapper';
 import { CommentRepository } from './comment.repository';
 import { CommentResponseDto } from './model/dto';
-
 @Injectable()
 export class CommentService {
   constructor(
