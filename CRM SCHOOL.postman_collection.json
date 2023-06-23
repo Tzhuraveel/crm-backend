@@ -210,24 +210,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{apiNest}}/excel/generate",
-							"host": [
-								"{{apiNest}}"
-							],
-							"path": [
-								"excel",
-								"generate"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -262,7 +244,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/orders?manager=true",
+							"raw": "{{apiNest}}/orders?page=1&sort=email&start_course=2021&end_course=2023&name=a&surname=ал&age=20&email=genna&course_type=pro&course_format=static&course=QACX&status=agree&phone=8",
 							"host": [
 								"{{apiNest}}"
 							],
@@ -271,8 +253,56 @@
 							],
 							"query": [
 								{
-									"key": "manager",
-									"value": "true"
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "sort",
+									"value": "email"
+								},
+								{
+									"key": "start_course",
+									"value": "2021"
+								},
+								{
+									"key": "end_course",
+									"value": "2023"
+								},
+								{
+									"key": "name",
+									"value": "a"
+								},
+								{
+									"key": "surname",
+									"value": "ал"
+								},
+								{
+									"key": "age",
+									"value": "20"
+								},
+								{
+									"key": "email",
+									"value": "genna"
+								},
+								{
+									"key": "course_type",
+									"value": "pro"
+								},
+								{
+									"key": "course_format",
+									"value": "static"
+								},
+								{
+									"key": "course",
+									"value": "QACX"
+								},
+								{
+									"key": "status",
+									"value": "agree"
+								},
+								{
+									"key": "phone",
+									"value": "8"
 								}
 							]
 						}
@@ -304,13 +334,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiNest}}/orders/499",
+							"raw": "{{apiNest}}/orders/511",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"orders",
-								"499"
+								"511"
 							]
 						}
 					},
@@ -631,14 +661,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiNest}}/admin/forgot-token/9",
+							"raw": "{{apiNest}}/admin/forgot-token/1",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"admin",
 								"forgot-token",
-								"9"
+								"1"
 							]
 						}
 					},
@@ -719,14 +749,14 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "{{apiNest}}/admin/ban-manager/8",
+							"raw": "{{apiNest}}/admin/ban-manager/",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"admin",
 								"ban-manager",
-								"8"
+								""
 							]
 						}
 					},
@@ -782,13 +812,67 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiNest}}/excel/users",
+							"raw": "{{apiNest}}/excel/users?page=1&sort=email&start_course=2021&end_course=2023&name=a&surname=ал&age=20&email=genna&course_type=pro&course_format=static&course=QACX&status=agree&phone=8",
 							"host": [
 								"{{apiNest}}"
 							],
 							"path": [
 								"excel",
 								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "sort",
+									"value": "email"
+								},
+								{
+									"key": "start_course",
+									"value": "2021"
+								},
+								{
+									"key": "end_course",
+									"value": "2023"
+								},
+								{
+									"key": "name",
+									"value": "a"
+								},
+								{
+									"key": "surname",
+									"value": "ал"
+								},
+								{
+									"key": "age",
+									"value": "20"
+								},
+								{
+									"key": "email",
+									"value": "genna"
+								},
+								{
+									"key": "course_type",
+									"value": "pro"
+								},
+								{
+									"key": "course_format",
+									"value": "static"
+								},
+								{
+									"key": "course",
+									"value": "QACX"
+								},
+								{
+									"key": "status",
+									"value": "agree"
+								},
+								{
+									"key": "phone",
+									"value": "8"
+								}
 							]
 						}
 					},
