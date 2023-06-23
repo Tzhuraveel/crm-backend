@@ -17,7 +17,7 @@ const selectedRelative = {
   comment: {
     id: true,
     comment: true,
-    createdAt: true,
+    created_at: true,
     manager: managerField,
   },
 };
@@ -46,8 +46,11 @@ export class OrderRepository extends Repository<Orders> {
   public async getOrderStatistic(): Promise<IOrderStatus[]> {
     return this.createQueryBuilder()
       .select('COUNT(*)', 'count')
-      .addSelect('status')
-      .groupBy('status')
+      .addSelect(
+        "CASE WHEN status IS NULL THEN 'new' ELSE status END",
+        'status',
+      )
+      .groupBy("CASE WHEN status IS NULL THEN 'new' ELSE status END")
       .getRawMany();
   }
 
@@ -55,8 +58,11 @@ export class OrderRepository extends Repository<Orders> {
     return this.createQueryBuilder()
       .select('COUNT(*)', 'count')
       .where('manager = :manager', { manager: userId })
-      .addSelect('status')
-      .groupBy('status')
+      .addSelect(
+        "CASE WHEN status IS NULL THEN 'new' ELSE status END",
+        'status',
+      )
+      .groupBy("CASE WHEN status IS NULL THEN 'new' ELSE status END")
       .getRawMany();
   }
 

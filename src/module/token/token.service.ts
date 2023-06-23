@@ -102,22 +102,26 @@ export class TokenService {
     return forgotToken;
   }
 
-  public async findByRefreshToken(token): Promise<Token> {
+  public async findByRefreshToken(token: string): Promise<Token> {
     return await this.tokenRepository.findOne({
       where: { refreshToken: token },
     });
   }
 
-  public async findByAccessToken(token): Promise<Token> {
+  public async findByAccessToken(token: string): Promise<Token> {
     return await this.tokenRepository.findOne({
       where: { accessToken: token },
     });
   }
 
-  public async deleteManyTokenByDate(createdAt) {
+  public async deleteManyTokenByDate(createdAt: Date) {
     await this.tokenRepository.delete({
-      createdAt: LessThan(createdAt),
+      created_at: LessThan(createdAt),
     });
+  }
+
+  public async deleteByRefreshToken(token: string) {
+    await this.tokenRepository.delete({ refreshToken: token });
   }
 
   public async findByActionToken(
@@ -128,8 +132,6 @@ export class TokenService {
       where: { actionToken: token, typeToken },
     });
 
-    console.log(actionTokenFromDb);
-
     if (!actionTokenFromDb)
       throw new NotFoundException('Token deleted or expired');
 
@@ -138,7 +140,7 @@ export class TokenService {
 
   public async deleteManyActionTokenByDate(createdAt) {
     await this.actionTokenRepository.delete({
-      createdAt: LessThan(createdAt),
+      created_at: LessThan(createdAt),
     });
   }
 

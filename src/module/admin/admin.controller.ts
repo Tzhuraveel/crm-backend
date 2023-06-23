@@ -49,6 +49,7 @@ export class AdminController {
     private readonly orderService: OrderService,
     private readonly managementService: ManagementService,
   ) {}
+
   @ApiOperation({
     description: 'Get an action token to activate the user',
     summary: 'action token',

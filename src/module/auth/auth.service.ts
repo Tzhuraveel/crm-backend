@@ -36,6 +36,11 @@ export class AuthService {
     private readonly userMapper: UserMapper,
   ) {}
 
+  public async asdf() {
+    const admin = await this.passwordService.hash('admin');
+    console.log(admin);
+  }
+
   public async validateAuthToken(token): Promise<User> {
     const payload = (await this.tokenService.verifyAuthToken(
       token,
@@ -111,10 +116,15 @@ export class AuthService {
       throw new NotFoundException('Token deleted or expired');
     }
 
-    return await this.tokenService.createTokenPair({
-      userId: userFromDb.id,
-      role: userFromDb.role,
-    });
+    const [createdNewTokenPair] = await Promise.all([
+      await this.tokenService.createTokenPair({
+        userId: userFromDb.id,
+        role: userFromDb.role,
+      }),
+      await this.tokenService.deleteByRefreshToken(token),
+    ]);
+
+    return createdNewTokenPair;
   }
 
   public userFromMapper(manager: User): UserResponseDto {

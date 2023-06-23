@@ -19,7 +19,7 @@ export class OrderMapper {
       sum: order.sum,
       alreadyPaid: order.alreadyPaid,
       group: order.group?.name,
-      created_at: order.createdAt,
+      created_at: order.created_at,
       manager: order.manager?.name,
     };
   }

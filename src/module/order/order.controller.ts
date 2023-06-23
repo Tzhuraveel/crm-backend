@@ -22,16 +22,19 @@ import {
 
 import { Orders } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
-import { IPageOptions, IPagePagination } from '../page/model/interface';
+import { IPagePagination } from '../page/model/interface';
+import { PageMapper } from '../page/page.mapper';
 import { UserResponseDto } from '../user/model/dto';
 import { OrdersResponseDto, OrderUpdateDto, QueryDto } from './model/dto';
-import { IOrderQueriesData } from './model/interface';
 import { OrderService } from './order.service';
 
 @ApiTags('orders')
 @Controller('orders')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(
+    private readonly orderService: OrderService,
+    private readonly pageMapper: PageMapper,
+  ) {}
 
   @UseGuards(BearerGuard)
   @ApiOperation({
@@ -46,25 +49,7 @@ export class OrderController {
     @Res() res,
     @Query() pageOptions: QueryDto,
   ): Promise<IPagePagination<UserResponseDto[]>> {
-    const {
-      page,
-      take,
-      skip,
-      sort,
-      id,
-      manager,
-      start_course,
-      end_course,
-      ...restData
-    } = pageOptions;
-    const pageData = { page, take, skip, sort } as IPageOptions;
-    const orderData = {
-      id,
-      manager,
-      start_course,
-      end_course,
-      restData,
-    } as IOrderQueriesData;
+    const { pageData, orderData } = this.pageMapper.toRequestQuery(pageOptions);
 
     const orders = await this.orderService.getAllWithPagination(
       pageData,

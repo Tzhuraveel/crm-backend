@@ -16,7 +16,7 @@ interface IOrderDetails {
 
 export interface IOrder extends IOrderDetails {
   id?: number;
-  createdAt: Date;
+  created_at: Date;
 }
 
 export interface IOrderQueriesData {

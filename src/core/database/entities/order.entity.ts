@@ -1,6 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -14,70 +14,60 @@ import {
   ECourseType,
   EStatus,
 } from '../../../module/order/model/enum';
-import { TimeStamp } from './abstract.entity';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class Orders extends TimeStamp {
-  @PrimaryGeneratedColumn()
+export class Orders {
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column({ type: 'varchar', length: 25, nullable: true })
-  @IsOptional()
-  @IsString()
+  @Column({ type: 'varchar', length: 25, nullable: true, default: null })
   name?: string;
 
-  @Column({ type: 'varchar', length: 25, nullable: true })
-  @IsOptional()
-  @IsString()
+  @Column({ type: 'varchar', length: 25, nullable: true, default: null })
   surname?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  @IsOptional()
-  @IsString()
+  @Column({ type: 'varchar', length: 100, nullable: true, default: null })
   email?: string;
 
-  @Column({ type: 'varchar', length: 12, nullable: true })
-  @IsOptional()
-  @IsString()
+  @Column({ type: 'varchar', length: 12, nullable: true, default: null })
   phone?: string;
 
-  @Column({ type: 'int', nullable: true })
-  @IsOptional()
+  @Column({ type: 'int', nullable: true, default: null })
   age?: number;
 
-  @Column({ type: 'int', nullable: true })
-  @IsOptional()
-  sum?: number;
-
-  @Column({ type: 'int', nullable: true })
-  @IsOptional()
-  alreadyPaid?: number;
-
-  @Column({ type: 'enum', enum: ECourseType, nullable: true })
-  @IsOptional()
-  course_type?: ECourseType;
-
-  @Column({ type: 'enum', enum: ECourseFormat, nullable: true })
-  @IsOptional()
-  course_format?: ECourseFormat;
-
-  @Column({ type: 'enum', enum: ECourse, nullable: true })
-  @IsOptional()
+  @Column({ type: 'varchar', length: 10, nullable: true, default: null })
   course?: ECourse;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  @IsOptional()
+  @Column({
+    type: 'varchar',
+    length: 15,
+    nullable: true,
+    default: null,
+  })
+  course_format?: ECourseFormat;
+
+  @Column({ type: 'varchar', length: 100, nullable: true, default: null })
+  course_type?: ECourseType;
+
+  @Column({ type: 'int', nullable: true, default: null })
+  sum?: number;
+
+  @Column({ type: 'int', nullable: true, default: null })
+  alreadyPaid?: number;
+
+  @CreateDateColumn({ name: 'created_at', default: null })
+  created_at: Date;
+
+  @Column({ type: 'varchar', length: 100, nullable: true, default: null })
   utm?: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  @IsOptional()
+  @Column({ type: 'varchar', length: 100, nullable: true, default: null })
   msg?: string;
 
-  @Column({ type: 'enum', enum: EStatus, nullable: true })
-  @IsOptional()
+  @Column({ type: 'varchar', length: 15, nullable: true, default: null })
   status?: EStatus;
 
   @ManyToOne(() => User, (user) => user.orders, {

@@ -26,16 +26,16 @@ export class OrderService {
   ) {}
 
   private generateCreatedAtClause(start_course: Date, end_course: Date): Date {
-    let createdAt;
+    let created_at;
     if (end_course && start_course) {
-      createdAt = Between(start_course, end_course);
+      created_at = Between(start_course, end_course);
     } else if (end_course) {
-      createdAt = LessThan(end_course);
+      created_at = LessThan(end_course);
     } else if (start_course) {
-      createdAt = MoreThan(start_course);
+      created_at = MoreThan(start_course);
     }
 
-    return createdAt;
+    return created_at;
   }
 
   public async getAllWithPagination(
@@ -51,15 +51,14 @@ export class OrderService {
       orderData.restData,
     ) as IOrder;
 
-    const createdAt = this.generateCreatedAtClause(
+    const created_at = this.generateCreatedAtClause(
       orderData.start_course,
       orderData.end_course,
     );
-
     const [orders, totalCount] = await this.orderRepository.getAllByQuery({
       typeSort,
       sortBy,
-      orderData: { id: orderData.id, manager, ...convertedData, createdAt },
+      orderData: { id: orderData.id, manager, ...convertedData, created_at },
       skip: pageOptions.skip,
       take: pageOptions.take,
     });
@@ -90,7 +89,7 @@ export class OrderService {
       orderData.restData,
     ) as IOrder;
 
-    const createdAt = this.generateCreatedAtClause(
+    const created_at = this.generateCreatedAtClause(
       orderData.start_course,
       orderData.end_course,
     );
@@ -98,7 +97,7 @@ export class OrderService {
     return await this.orderRepository.getAllForExcel({
       typeSort,
       sortBy,
-      orderData: { id: orderData.id, manager, ...convertedData, createdAt },
+      orderData: { id: orderData.id, manager, ...convertedData, created_at },
       skip: pageOptions.skip,
       take: pageOptions.take,
     });

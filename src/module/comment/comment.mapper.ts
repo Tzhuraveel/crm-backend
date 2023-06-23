@@ -9,7 +9,7 @@ export class CommentMapper {
     return {
       id: comment.id,
       comment: comment.comment,
-      createdAt: comment.createdAt,
+      created_at: comment.created_at,
       manager: {
         id: manager.id,
         name: manager.name,

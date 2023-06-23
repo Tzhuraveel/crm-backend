@@ -14,7 +14,7 @@ export class CommentResponseDto {
     type: Date,
     example: '2023-06-07T09:11:44.612Z',
   })
-  createdAt: Date;
+  created_at: Date;
 
   @ApiProperty({ type: () => UserBriefResponseDto })
   manager: UserBriefResponseDto;

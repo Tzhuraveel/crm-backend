@@ -9,7 +9,6 @@ import {
 
 import { Orders } from './order.entity';
 import { User } from './user.entity';
-
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
@@ -26,6 +25,6 @@ export class Comment {
   @JoinColumn({ name: 'manager' })
   manager: User;
 
-  @CreateDateColumn({ name: 'createdAt' })
-  createdAt: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  created_at: Date;
 }

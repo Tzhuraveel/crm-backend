@@ -11,15 +11,17 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { BearerGuard } from '../../core/guard';
 import { QueryDto } from '../order/model/dto';
-import { IOrderQueriesData } from '../order/model/interface';
-import { IPageOptions } from '../page/model/interface';
+import { PageMapper } from '../page/page.mapper';
 import { ExcelService } from './excel.service';
 
-UseGuards(BearerGuard);
+@UseGuards(BearerGuard)
 @ApiTags('excel')
 @Controller('excel')
 export class ExcelController {
-  constructor(private excelService: ExcelService) {}
+  constructor(
+    private readonly excelService: ExcelService,
+    private readonly pageMapper: PageMapper,
+  ) {}
 
   @ApiOperation({
     description: 'Get a table with orders in .xlsx extension',
@@ -29,25 +31,8 @@ export class ExcelController {
   @Header('Content-Type', 'text/xlsx')
   @Get('users')
   async download(@Req() req, @Res() res, @Query() pageOptions: QueryDto) {
-    const {
-      page,
-      take,
-      skip,
-      sort,
-      id,
-      manager,
-      start_course,
-      end_course,
-      ...restData
-    } = pageOptions;
-    const pageData = { page, take, skip, sort } as IPageOptions;
-    const orderData = {
-      id,
-      manager,
-      start_course,
-      end_course,
-      restData,
-    } as IOrderQueriesData;
+    const { pageData, orderData } = this.pageMapper.toRequestQuery(pageOptions);
+
     const result = await this.excelService.downloadExcel(
       pageData,
       orderData,
