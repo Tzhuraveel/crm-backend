@@ -10,9 +10,9 @@ import {
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { BearerGuard } from '../../core/guard';
-import { QueryDto } from '../order/model/dto';
 import { PageMapper } from '../page/page.mapper';
 import { ExcelService } from './excel.service';
+import { ExcelDto } from './model/dto/excel.dto';
 
 @UseGuards(BearerGuard)
 @ApiTags('excel')
@@ -30,7 +30,7 @@ export class ExcelController {
   @ApiOkResponse()
   @Header('Content-Type', 'text/xlsx')
   @Get('users')
-  async download(@Req() req, @Res() res, @Query() pageOptions: QueryDto) {
+  async download(@Req() req, @Res() res, @Query() pageOptions: ExcelDto) {
     const { pageData, orderData } = this.pageMapper.toRequestQuery(pageOptions);
 
     const result = await this.excelService.downloadExcel(

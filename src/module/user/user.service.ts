@@ -22,7 +22,7 @@ export class UserService {
     private readonly pageService: PageService,
   ) {}
 
-  public async getAllWithPagination(
+  public async getAllManagersWithPagination(
     pageOptions: IPageOptions,
     userData: IUserQueriesData,
   ): Promise<IPagePagination<UserStatisticsResponseDto[]>> {
@@ -45,7 +45,7 @@ export class UserService {
     const users = this.userMapper.toManyResponse(usersFromDb);
 
     const usersWithStatistics: UserStatisticsResponseDto[] = await Promise.all(
-      users.map(async (user) => {
+      users.map(async (user): Promise<UserStatisticsResponseDto> => {
         const userStatistics = await this.orderService.getUserStatistics(
           user.id,
         );
@@ -53,7 +53,7 @@ export class UserService {
         return {
           ...user,
           statistics: userStatistics,
-        } as UserStatisticsResponseDto;
+        };
       }),
     );
 

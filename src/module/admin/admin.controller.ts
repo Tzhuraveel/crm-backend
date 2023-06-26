@@ -29,12 +29,14 @@ import { ActionTokenResponseDto, RegisterDto } from '../auth/model/dto';
 import { ManagementService } from '../management';
 import { OrderService } from '../order';
 import { OrderStatisticsResponseDto } from '../order/model/dto';
-import { IPageOptions } from '../page/model/interface';
+import { IOrderStatistics } from '../order/model/interface';
+import { IPageOptions, IPagePagination } from '../page/model/interface';
 import { UserService } from '../user';
 import {
   UserQueryDto,
   UserResponseDto,
   UsersResponseDto,
+  UserStatisticsResponseDto,
 } from '../user/model/dto';
 import { EUserRole } from '../user/model/enum';
 import { IUserQueriesData } from '../user/model/interface';
@@ -57,11 +59,11 @@ export class AdminController {
   @ApiOkResponse({ type: ActionTokenResponseDto })
   @RolesAccess(EUserRole.ADMIN)
   @Get('/activate-token/:userId')
-  private async createActivateToken(
+  private async getActivateToken(
     @Res() res,
     @Param('userId', IntTransformPipe) userId: number,
   ): Promise<ActionTokenResponseDto> {
-    const actionToken = await this.authService.createActivateToken(userId);
+    const actionToken = await this.authService.getActivateToken(userId);
 
     return res.status(HttpStatus.OK).json({ actionToken });
   }
@@ -73,38 +75,38 @@ export class AdminController {
   @ApiOkResponse({ type: ActionTokenResponseDto })
   @RolesAccess(EUserRole.ADMIN)
   @Get('/forgot-token/:userId')
-  private async createForgotToken(
+  private async getForgotToken(
     @Res() res,
     @Param('userId', IntTransformPipe) userId: number,
   ): Promise<ActionTokenResponseDto> {
-    const actionToken = await this.authService.createForgotToken(userId);
+    const actionToken = await this.authService.getForgotToken(userId);
 
     return res.status(HttpStatus.OK).json({ actionToken });
   }
 
+  @RolesAccess(EUserRole.ADMIN)
   @ApiBody({ required: true, type: RegisterDto })
   @ApiOperation({ description: 'register manager' })
   @ApiCreatedResponse({ type: UserResponseDto })
-  @RolesAccess(EUserRole.ADMIN)
   @Post('register-manager')
-  private async create(
+  private async createManager(
     @Res() res,
     @Body() body: RegisterDto,
   ): Promise<UserResponseDto> {
-    const createdUser = await this.authService.register(body);
+    const createdUser = await this.authService.createManager(body);
 
     return res.status(HttpStatus.CREATED).json(createdUser);
   }
 
-  @ApiOperation({ description: 'Ban manager', summary: 'ban' })
   @RolesAccess(EUserRole.ADMIN)
+  @ApiOperation({ description: 'Ban manager', summary: 'ban' })
   @ApiNoContentResponse()
   @Patch('ban-manager/:userId')
-  private async ban(
+  private async banManager(
     @Res() res,
     @Param('userId', IntTransformPipe) userId: number,
   ) {
-    await this.managementService.ban(userId);
+    await this.managementService.banManager(userId);
 
     return res.status(HttpStatus.NO_CONTENT).sendStatus(HttpStatus.NO_CONTENT);
   }
@@ -113,11 +115,11 @@ export class AdminController {
   @RolesAccess(EUserRole.ADMIN)
   @ApiNoContentResponse()
   @Patch('unban-manager/:userId')
-  private async unban(
+  private async unbanManager(
     @Res() res,
     @Param('userId', IntTransformPipe) userId: number,
   ) {
-    await this.managementService.unban(userId);
+    await this.managementService.unbanManager(userId);
 
     return res.status(HttpStatus.NO_CONTENT).sendStatus(HttpStatus.NO_CONTENT);
   }
@@ -130,17 +132,30 @@ export class AdminController {
   @ApiOkResponse({ type: [UsersResponseDto] })
   @RolesAccess(EUserRole.ADMIN)
   @Get('all-managers')
-  private async getAll(@Res() res, @Query() pageOptions: UserQueryDto) {
+  private async getAllManagers(
+    @Res() res,
+    @Query() pageQueries: UserQueryDto,
+  ): Promise<IPagePagination<UserStatisticsResponseDto[]>> {
     const { take, page, skip, start_login, end_login, sort, ...restData } =
-      pageOptions;
+      pageQueries;
 
-    const pageData = { take, page, skip, sort } as IPageOptions;
-    const userData = { start_login, end_login, restData } as IUserQueriesData;
+    const pageOptions: IPageOptions = {
+      take,
+      page,
+      skip,
+      sort,
+    } as IPageOptions;
+    const userData: IUserQueriesData = {
+      start_login,
+      end_login,
+      restData,
+    } as IUserQueriesData;
 
-    const users = await this.userService.getAllWithPagination(
-      pageData,
-      userData,
-    );
+    const users: IPagePagination<UserStatisticsResponseDto[]> =
+      await this.userService.getAllManagersWithPagination(
+        pageOptions,
+        userData,
+      );
 
     return res.status(HttpStatus.OK).json(users);
   }
@@ -152,10 +167,11 @@ export class AdminController {
   @RolesAccess(EUserRole.ADMIN)
   @ApiOkResponse({ type: OrderStatisticsResponseDto })
   @Get('/statistic/orders')
-  private async orderStatistics(
+  private async getOrderStatistics(
     @Res() res,
   ): Promise<OrderStatisticsResponseDto> {
-    const orderStatistics = await this.orderService.getOrderStatistics();
+    const orderStatistics: IOrderStatistics =
+      await this.orderService.getOrderStatistics();
 
     return res.status(HttpStatus.OK).json(orderStatistics);
   }

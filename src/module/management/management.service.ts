@@ -12,7 +12,7 @@ import { UserRepository } from '../user/user.repository';
 export class ManagementService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async ban(userId: number): Promise<void> {
+  public async banManager(userId: number): Promise<void> {
     const userFromDb = await this.userRepository.findOneBy({ id: userId });
 
     if (!userFromDb) throw new NotFoundEntityException('User');
@@ -26,7 +26,7 @@ export class ManagementService {
     await this.userRepository.update(userId, { is_banned: true });
   }
 
-  public async unban(userId: number): Promise<void> {
+  public async unbanManager(userId: number): Promise<void> {
     const userFromDb = await this.userRepository.findOneBy({ id: userId });
 
     if (!userFromDb) throw new NotFoundEntityException('User');

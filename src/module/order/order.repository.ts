@@ -54,7 +54,9 @@ export class OrderRepository extends Repository<Orders> {
       .getRawMany();
   }
 
-  public async getOrderStatisticById(userId: number): Promise<IOrderStatus[]> {
+  public async getOrderStatisticByManagerId(
+    userId: number,
+  ): Promise<IOrderStatus[]> {
     return this.createQueryBuilder()
       .select('COUNT(*)', 'count')
       .where('manager = :manager', { manager: userId })

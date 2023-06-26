@@ -20,7 +20,7 @@ import { User } from './user.entity';
 
 @Entity()
 export class Orders {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
   @Column({ type: 'varchar', length: 25, nullable: true, default: null })

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-http-bearer';
 
-import { AuthService } from '../../module/auth/auth.service';
+import { AuthService } from '../../module/auth';
 import { TokenService } from '../../module/token';
 import { User } from '../database/entities';
 

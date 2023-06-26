@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { User } from '../../core/database/entities';
+import { Comment, User } from '../../core/database/entities';
 import { AnotherManagerException } from '../../core/exception';
 import { EStatus } from '../order/model/enum';
 import { OrderRepository } from '../order/order.repository';
@@ -49,8 +49,9 @@ export class CommentService {
     return this.commentMapper.toResponse(commentFromDb);
   }
 
-  public async delete(id: number, manager: User) {
-    const commentFromDb = await this.commentRepository.findByIdWithManager(id);
+  public async delete(id: number, manager: User): Promise<void> {
+    const commentFromDb: Comment =
+      await this.commentRepository.findByIdWithManager(id);
 
     if (!commentFromDb) throw new NotFoundException('Comment not found');
 

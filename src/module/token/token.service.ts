@@ -24,7 +24,7 @@ export class TokenService {
   ) {}
 
   public async verifyAuthToken(token): Promise<ITokenPayload> {
-    const payload = (await this.jwtService.verifyAsync(token)) as ITokenPayload;
+    const payload: ITokenPayload = await this.jwtService.verifyAsync(token);
 
     if (!payload)
       throw new HttpException('Token not valid', HttpStatus.BAD_REQUEST);
@@ -47,7 +47,7 @@ export class TokenService {
         break;
     }
 
-    const payload = (await this.jwtService.verifyAsync(token, {
+    const payload: ITokenPayload = (await this.jwtService.verifyAsync(token, {
       secret,
     })) as ITokenPayload;
 
@@ -72,7 +72,7 @@ export class TokenService {
     return { accessToken, refreshToken };
   }
 
-  public async createActivateToken(payload: ITokenPayload): Promise<string> {
+  public async getActivateToken(payload: ITokenPayload): Promise<string> {
     const activateToken = await this.jwtService.signAsync(payload, {
       secret: this.appConfigService.secretActionActivateKey,
       expiresIn: '10m',
@@ -87,7 +87,7 @@ export class TokenService {
     return activateToken;
   }
 
-  public async createForgotToken(payload: ITokenPayload): Promise<string> {
+  public async getForgotToken(payload: ITokenPayload): Promise<string> {
     const forgotToken = await this.jwtService.signAsync(payload, {
       secret: this.appConfigService.secretActionForgotKey,
       expiresIn: '10m',

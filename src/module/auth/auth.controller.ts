@@ -20,6 +20,7 @@ import {
 
 import { User } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
+import { ITokenPair } from '../token/model/interface';
 import { UserResponseDto } from '../user/model/dto';
 import { AuthService } from './auth.service';
 import {
@@ -46,7 +47,7 @@ export class AuthController {
     @Body() body: LoginDto,
     @Res() res,
   ): Promise<AccessResponseDto> {
-    const tokenPair = await this.authService.login(body);
+    const tokenPair: AccessResponseDto = await this.authService.login(body);
 
     return res.status(HttpStatus.OK).json(tokenPair);
   }
@@ -60,13 +61,16 @@ export class AuthController {
   })
   @ApiOkResponse({ type: TokenResponseDto })
   @Get('refresh')
-  public async refresh(@Req() req, @Res() res): Promise<TokenResponseDto> {
+  public async getRefreshToken(
+    @Req() req,
+    @Res() res,
+  ): Promise<TokenResponseDto> {
     const bearerToken = req.headers.authorization;
 
     if (!bearerToken && !bearerToken?.startsWith('Bearer ')) {
       throw new UnauthorizedException('Invalid Bearer Token');
     }
-    const tokenPair = await this.authService.refresh(
+    const tokenPair: ITokenPair = await this.authService.getRefreshToken(
       bearerToken.replace('Bearer ', ''),
     );
 
@@ -80,7 +84,7 @@ export class AuthController {
   @ApiOkResponse({ type: UserResponseDto })
   @UseGuards(BearerGuard)
   @Get('me')
-  public async findUser(@Req() req, @Res() res): Promise<User> {
+  public async getAuthorizedUser(@Req() req, @Res() res): Promise<User> {
     return res
       .status(HttpStatus.OK)
       .json(this.authService.userFromMapper(req.user));
@@ -98,7 +102,10 @@ export class AuthController {
     @Body() body: PasswordDto,
     @Param('token') token: string,
   ): Promise<UserResponseDto> {
-    const createdUser = await this.authService.activateUser(token, body);
+    const createdUser: UserResponseDto = await this.authService.activateUser(
+      token,
+      body,
+    );
 
     return res.status(HttpStatus.CREATED).json(createdUser);
   }

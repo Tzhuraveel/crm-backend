@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsAlpha,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -59,6 +60,7 @@ export class RegisterDto {
     minLength: 2,
     maxLength: 40,
   })
+  @IsAlpha()
   @Length(2, 40)
   @IsString()
   name: string;
@@ -69,6 +71,7 @@ export class RegisterDto {
     minLength: 2,
     maxLength: 40,
   })
+  @IsAlpha()
   @Length(2, 40)
   @IsString()
   surname: string;

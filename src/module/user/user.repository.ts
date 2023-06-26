@@ -13,7 +13,7 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.manager);
   }
 
-  public async createUser(user: RegisterDto): Promise<User> {
+  public async createManager(user: RegisterDto): Promise<User> {
     return await this.save({ ...user, role: EUserRole.MANAGER });
   }
 

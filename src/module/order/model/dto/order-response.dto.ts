@@ -73,7 +73,7 @@ export class OrdersResponseDto extends PageResponseDto {
   @ApiProperty({ type: [CommentResponseDto] })
   @ValidateNested()
   @Type(() => CommentResponseDto)
-  comment: [CommentResponseDto];
+  comment: CommentResponseDto[];
 }
 
 class StatisticsDto {
@@ -89,5 +89,5 @@ export class OrderStatisticsResponseDto {
   total: number;
 
   @ApiProperty({ type: [StatisticsDto] })
-  statuses: [StatisticsDto];
+  statuses: StatisticsDto[];
 }

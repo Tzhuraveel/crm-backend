@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Between, LessThan, MoreThan } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 
 import { Group, Orders, User } from '../../core/database/entities';
 import { EDbField, EDynamicallyAction } from '../../core/enum';
@@ -28,11 +28,14 @@ export class OrderService {
   private generateCreatedAtClause(start_course: Date, end_course: Date): Date {
     let created_at;
     if (end_course && start_course) {
-      created_at = Between(start_course, end_course);
+      created_at = Between(
+        start_course,
+        new Date(end_course.setDate(end_course.getDate() + 1)),
+      );
     } else if (end_course) {
-      created_at = LessThan(end_course);
+      created_at = LessThanOrEqual(end_course);
     } else if (start_course) {
-      created_at = MoreThan(start_course);
+      created_at = MoreThanOrEqual(start_course);
     }
 
     return created_at;
@@ -55,6 +58,7 @@ export class OrderService {
       orderData.start_course,
       orderData.end_course,
     );
+
     const [orders, totalCount] = await this.orderRepository.getAllByQuery({
       typeSort,
       sortBy,
@@ -114,7 +118,7 @@ export class OrderService {
     const orderFromDb = await this.orderRepository.findOrderWithManager(
       orderId,
     );
-    if (!orderFromDb) throw new NotFoundException('Order not found');
+    if (!orderFromDb) throw new NotFoundEntityException('Order');
 
     const { manager: managerFromDb } = orderFromDb;
     if (managerFromDb && managerFromDb.id !== manager.id)
@@ -125,10 +129,17 @@ export class OrderService {
         where: { id: orderData.group },
       });
 
-      if (!groupFromDb) throw new NotFoundException('Group not found');
+      if (!groupFromDb) throw new NotFoundEntityException('Group');
     }
 
-    if (managerFromDb && orderData.status === EStatus.NEW) obstacle = null;
+    const result: boolean =
+      orderData.status === EStatus.NEW || orderData.status === null;
+
+    if (managerFromDb && result) {
+      obstacle = null;
+    } else if (!managerFromDb && result) {
+      manager = undefined;
+    }
 
     return await this.orderRepository.updateOrder(
       orderId,
@@ -160,7 +171,9 @@ export class OrderService {
       throw new NotFoundEntityException('User');
     }
 
-    const statuses = await this.orderRepository.getOrderStatisticById(userId);
+    const statuses = await this.orderRepository.getOrderStatisticByManagerId(
+      userId,
+    );
 
     const total = statuses.reduce(
       (accum, value) => accum + parseInt(value.count),

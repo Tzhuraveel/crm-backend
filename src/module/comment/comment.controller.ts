@@ -4,7 +4,6 @@ import {
   Delete,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Post,
   Req,
   Res,
@@ -20,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 
 import { BearerGuard } from '../../core/guard';
+import { IntTransformPipe } from '../../core/validation/pipe';
 import { CommentService } from './comment.service';
 import { CommentDto, CommentResponseDto } from './model/dto';
 
@@ -46,9 +46,9 @@ export class CommentController {
     @Res() res,
     @Req() req,
     @Body() body: CommentDto,
-    @Param('orderId', ParseIntPipe) orderId: number,
+    @Param('orderId', IntTransformPipe) orderId: number,
   ) {
-    const comment = await this.commentService.add(
+    const comment: CommentResponseDto = await this.commentService.add(
       body.comment,
       orderId,
       req.user,
@@ -72,7 +72,7 @@ export class CommentController {
   private async delete(
     @Res() res,
     @Req() req,
-    @Param('commentId', ParseIntPipe) commentId: number,
+    @Param('commentId', IntTransformPipe) commentId: number,
   ) {
     await this.commentService.delete(commentId, req.user);
 
