@@ -1,23 +1,17 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 
-import { AuthModule } from '../auth';
-import { GroupRepository } from '../group/group.repository';
-import { PageService } from '../page';
-import { PageMapper } from '../page/page.mapper';
+import { AuthModule } from '../auth/auth.module';
+import { GroupModule } from '../group';
+import { PageModule } from '../page';
 import { OrderController } from './order.controller';
+import { OrderMapper } from './order.mapper';
 import { OrderRepository } from './order.repository';
 import { OrderService } from './order.service';
 
 @Module({
-  imports: [AuthModule],
+  imports: [forwardRef(() => AuthModule), GroupModule, PageModule],
   controllers: [OrderController],
-  providers: [
-    PageService,
-    OrderService,
-    OrderRepository,
-    GroupRepository,
-    PageMapper,
-  ],
-  exports: [OrderService],
+  providers: [OrderService, OrderRepository, OrderMapper],
+  exports: [OrderService, OrderRepository, OrderMapper],
 })
 export class OrderModule {}

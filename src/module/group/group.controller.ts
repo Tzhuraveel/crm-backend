@@ -67,7 +67,7 @@ export class GroupController {
   })
   @ApiNoContentResponse()
   @Delete(':groupId')
-  private async delete(
+  private async deleteGroup(
     @Res() res,
     @Param('groupId', IntTransformPipe) groupId: number,
   ) {

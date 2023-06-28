@@ -31,9 +31,9 @@ dayjs.extend(utc);
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly tokenService: TokenService,
     private readonly passwordService: PasswordService,
+    private readonly userRepository: UserRepository,
     private readonly userMapper: UserMapper,
   ) {}
 

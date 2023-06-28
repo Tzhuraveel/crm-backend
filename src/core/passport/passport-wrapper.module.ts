@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 
-import { AuthModule } from '../../module/auth';
+import { AuthModule } from '../../module/auth/auth.module';
 import { TokenModule } from '../../module/token';
 import { BearerStrategy } from './bearer.strategy';
 

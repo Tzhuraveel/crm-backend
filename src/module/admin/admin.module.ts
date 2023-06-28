@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { AuthModule } from '../auth';
+import { AuthModule } from '../auth/auth.module';
 import { ManagementModule } from '../management';
 import { OrderModule } from '../order';
 import { UserModule } from '../user';
