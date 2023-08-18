@@ -32,9 +32,20 @@ export interface IOrderStatus {
   count: string;
 }
 
-export interface IOrderStatistics {
+export interface IOrderMoneys {
+  totalSum: string;
+  totalAlreadyPaid: string;
+}
+
+export interface IOrderStatusesStatistic {
   total: number;
   statuses: IOrderStatus[];
+}
+export interface IOrderTotalStatistic extends IOrderStatusesStatistic {
+  totalSum: number;
+  totalAlreadyPaid: number;
+  totalSumUSD: number;
+  totalAlreadyPaidUSD: number;
 }
 
 export interface IOrderExcel {

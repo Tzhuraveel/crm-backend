@@ -8,12 +8,18 @@ import {
   NotFoundEntityException,
 } from '../../core/exception';
 import { AuthService } from '../auth';
+import { CurrencyConverterService } from '../currency-converter';
 import { GroupRepository } from '../group/group.repository';
 import { PageService } from '../page';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
 import { OrderUpdateDto } from './model/dto';
 import { EStatus } from './model/enum';
-import { IOrder, IOrderQueriesData, IOrderStatistics } from './model/interface';
+import {
+  IOrder,
+  IOrderQueriesData,
+  IOrderStatusesStatistic,
+  IOrderTotalStatistic,
+} from './model/interface';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -23,6 +29,7 @@ export class OrderService {
     private readonly orderRepository: OrderRepository,
     private readonly groupRepository: GroupRepository,
     private readonly pageService: PageService,
+    private readonly currencyConverterService: CurrencyConverterService,
   ) {}
 
   private generateCreatedAtClause(start_course: Date, end_course: Date): Date {
@@ -149,27 +156,42 @@ export class OrderService {
     );
   }
 
-  public async getOrderStatistics(): Promise<IOrderStatistics> {
+  public async getOrderStatistics(): Promise<IOrderTotalStatistic> {
     const statuses = await this.orderRepository.getOrderStatistic();
+    const { totalSum, totalAlreadyPaid } =
+      await this.orderRepository.getCountFieldsAlreadyPaidAndSum();
+
+    const [totalSumUSD, totalAlreadyPaidUSD] = await Promise.all([
+      this.currencyConverterService.convertMoneyToCurrency(+totalSum, 'USD'),
+      this.currencyConverterService.convertMoneyToCurrency(
+        +totalAlreadyPaid,
+        'USD',
+      ),
+    ]);
 
     const total = statuses.reduce(
       (accum, value) => accum + parseInt(value.count),
       0,
     );
 
-    return { total, statuses };
+    return {
+      total,
+      totalSum: +totalSum,
+      totalSumUSD,
+      totalAlreadyPaid: +totalAlreadyPaid,
+      totalAlreadyPaidUSD,
+      statuses,
+    };
   }
 
-  public async getUserStatistics(userId: number): Promise<IOrderStatistics> {
-    const userFromDb = await this.authService.checkIsUserExist(
+  public async getUserStatistics(
+    userId: number,
+  ): Promise<IOrderStatusesStatistic> {
+    await this.authService.checkIsUserExist(
       EDynamicallyAction.NEXT,
       userId,
       EDbField.ID,
     );
-
-    if (!userFromDb) {
-      throw new NotFoundEntityException('User');
-    }
 
     const statuses = await this.orderRepository.getOrderStatisticByManagerId(
       userId,

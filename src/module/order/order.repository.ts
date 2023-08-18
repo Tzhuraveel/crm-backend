@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Group, Orders, User } from '../../core/database/entities';
 import { IParameterSearch } from '../page/model/interface';
 import { OrderUpdateDto } from './model/dto';
-import { IOrderStatus } from './model/interface';
+import { IOrderMoneys, IOrderStatus } from './model/interface';
 
 const managerField = {
   id: true,
@@ -44,7 +44,7 @@ export class OrderRepository extends Repository<Orders> {
   }
 
   public async getOrderStatistic(): Promise<IOrderStatus[]> {
-    return this.createQueryBuilder()
+    return await this.createQueryBuilder()
       .select('COUNT(*)', 'count')
       .addSelect(
         "CASE WHEN status IS NULL THEN 'new' ELSE status END",
@@ -52,6 +52,20 @@ export class OrderRepository extends Repository<Orders> {
       )
       .groupBy("CASE WHEN status IS NULL THEN 'new' ELSE status END")
       .getRawMany();
+  }
+
+  public async getCountFieldsAlreadyPaidAndSum(): Promise<IOrderMoneys> {
+    return await this.createQueryBuilder()
+      .select(
+        'CAST(SUM(CASE WHEN status NOT IN (:...statuses) THEN sum ELSE 0 END) AS DECIMAL(10, 2))',
+        'totalSum',
+      )
+      .addSelect(
+        'CAST(SUM(CASE WHEN status NOT IN (:...statuses) THEN alreadyPaid ELSE 0 END) AS DECIMAL(10, 2))',
+        'totalAlreadyPaid',
+      )
+      .setParameter('statuses', ['dubbing', 'new', 'disagree'])
+      .getRawOne();
   }
 
   public async getOrderStatisticByManagerId(

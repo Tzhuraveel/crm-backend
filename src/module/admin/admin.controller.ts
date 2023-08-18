@@ -28,8 +28,8 @@ import { AuthService } from '../auth';
 import { ActionTokenResponseDto, RegisterDto } from '../auth/model/dto';
 import { ManagementService } from '../management';
 import { OrderService } from '../order';
-import { OrderStatisticsResponseDto } from '../order/model/dto';
-import { IOrderStatistics } from '../order/model/interface';
+import { OrderTotalStatisticsResponseDto } from '../order/model/dto';
+import { IOrderTotalStatistic } from '../order/model/interface';
 import { IPageOptions, IPagePagination } from '../page/model/interface';
 import { UserService } from '../user';
 import {
@@ -165,12 +165,12 @@ export class AdminController {
     summary: 'order statistics',
   })
   @RolesAccess(EUserRole.ADMIN)
-  @ApiOkResponse({ type: OrderStatisticsResponseDto })
+  @ApiOkResponse({ type: OrderTotalStatisticsResponseDto })
   @Get('/statistic/orders')
   private async getOrderStatistics(
     @Res() res,
-  ): Promise<OrderStatisticsResponseDto> {
-    const orderStatistics: IOrderStatistics =
+  ): Promise<OrderTotalStatisticsResponseDto> {
+    const orderStatistics: IOrderTotalStatistic =
       await this.orderService.getOrderStatistics();
 
     return res.status(HttpStatus.OK).json(orderStatistics);

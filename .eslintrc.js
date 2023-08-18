@@ -22,6 +22,13 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'simple-import-sort/imports': 'error',
+    "@typescript-eslint/ban-ts-comment": "off",
     'simple-import-sort/exports': 'error',
+    '@typescript-eslint/no-empty-function': [
+      'error',
+      {
+        allow: ['constructors'],
+      },
+    ],
   },
 };

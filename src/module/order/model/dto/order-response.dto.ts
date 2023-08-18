@@ -91,3 +91,17 @@ export class OrderStatisticsResponseDto {
   @ApiProperty({ type: [StatisticsDto] })
   statuses: StatisticsDto[];
 }
+
+export class OrderTotalStatisticsResponseDto extends OrderStatisticsResponseDto {
+  @ApiProperty({ type: Number, example: 500 })
+  totalSum: number;
+
+  @ApiProperty({ type: Number, example: 500 })
+  totalSumUSD: number;
+
+  @ApiProperty({ type: Number, example: 500 })
+  totalAlreadyPaid: number;
+
+  @ApiProperty({ type: Number, example: 500 })
+  totalAlreadyPaidUSD: number;
+}

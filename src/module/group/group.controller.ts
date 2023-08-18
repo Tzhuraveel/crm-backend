@@ -55,10 +55,10 @@ export class GroupController {
   }
 
   @ApiOperation({
-    description: 'deletion a group',
-    summary:
+    description:
       'Deletion a group. Deletion a certain group also means deleting the group in the order шin which this group' +
       ' is used',
+    summary: 'deletion a group',
   })
   @ApiParam({
     required: true,
