@@ -9,7 +9,8 @@ The API provides robust filtering capabilities, allowing you to narrow down your
 This ensures that you have the flexibility to access the precise order data you need, optimizing your productivity.
 In addition, the API documentation is carefully prepared to help developers easily integrate and use the API in their projects.
 
->Note that this is only the backend of the project. The client part of the project can be found here [FRONT](https://github.com/Orest-Sabara/crm-frontend) 
+>Note that this is only the backend of the project. The client part of the project can be found here [FRONT](https://github.com/Orest-Sabara/crm-frontend)
+
 
 # Main technologies
 
@@ -40,6 +41,9 @@ In addition, the API documentation is carefully prepared to help developers easi
    http://localhost:<PORT> #port in .env file
    ```   
 ## Project description   
+
+>This project is missing the env file, without which the project will not work. Write to me on Linkedin or at timofiizhuravel@gmail.com and I will provide you with this file
+
 
 ## Brief project map
 
