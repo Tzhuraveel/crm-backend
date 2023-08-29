@@ -162,9 +162,9 @@ export class OrderService {
       await this.orderRepository.getCountFieldsAlreadyPaidAndSum();
 
     const [totalSumUSD, totalAlreadyPaidUSD] = await Promise.all([
-      this.currencyConverterService.convertMoneyToCurrency(+totalSum, 'USD'),
+      this.currencyConverterService.convertMoneyToCurrency(totalSum, 'USD'),
       this.currencyConverterService.convertMoneyToCurrency(
-        +totalAlreadyPaid,
+        totalAlreadyPaid,
         'USD',
       ),
     ]);
@@ -177,7 +177,7 @@ export class OrderService {
     return {
       total,
       totalSum: +totalSum,
-      totalSumUSD,
+      totalSumUSD: +totalSumUSD,
       totalAlreadyPaid: +totalAlreadyPaid,
       totalAlreadyPaidUSD,
       statuses,
