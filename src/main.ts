@@ -34,4 +34,4 @@ async function bootstrap() {
   const appConfig = app.get<AppConfigService>(AppConfigService);
   await app.listen(appConfig.port, () => console.log(appConfig.port));
 }
-bootstrap().then();
+void bootstrap();

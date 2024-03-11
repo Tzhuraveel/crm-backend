@@ -21,6 +21,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     'simple-import-sort/imports': 'error',
     "@typescript-eslint/ban-ts-comment": "off",
     'simple-import-sort/exports': 'error',
