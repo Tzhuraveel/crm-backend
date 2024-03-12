@@ -1,6 +1,7 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -40,10 +41,10 @@ export class TokenService {
 
     switch (typeToken) {
       case EActionToken.ACTIVATE:
-        secret = this.appConfigService.secretActionActivateKey;
+        secret = this.appConfigService.secretActivateToken;
         break;
       case EActionToken.FORGOT:
-        secret = this.appConfigService.secretActionForgotKey;
+        secret = this.appConfigService.secretForgotToken;
         break;
     }
 
@@ -74,7 +75,7 @@ export class TokenService {
 
   public async getActivateToken(payload: ITokenPayload): Promise<string> {
     const activateToken = await this.jwtService.signAsync(payload, {
-      secret: this.appConfigService.secretActionActivateKey,
+      secret: this.appConfigService.secretActivateToken,
       expiresIn: '10m',
     });
 
@@ -89,7 +90,7 @@ export class TokenService {
 
   public async getForgotToken(payload: ITokenPayload): Promise<string> {
     const forgotToken = await this.jwtService.signAsync(payload, {
-      secret: this.appConfigService.secretActionForgotKey,
+      secret: this.appConfigService.secretForgotToken,
       expiresIn: '10m',
     });
 

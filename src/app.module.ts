@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppConfigModule } from './config/app';
+import configuration from './config/config';
 import { TypeOrmConfigurations } from './config/db/type-orm-configuration';
 import { PassportWrapperModule } from './core/passport';
 import { AdminModule } from './module/admin';
@@ -18,11 +19,14 @@ import { UserModule } from './module/user';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
+    AuthModule,
     PassportWrapperModule,
     TypeOrmModule.forRootAsync(TypeOrmConfigurations.config),
     ScheduleModule.forRoot(),
-    AuthModule,
-    AppConfigModule,
     TokenModule,
     CronModule,
     OrderModule,
