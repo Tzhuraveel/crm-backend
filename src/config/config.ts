@@ -10,12 +10,12 @@ export default (): ConfigType => ({
     secretActivateToken: process.env.SECRET_ACTION_ACTIVATE_TOKEN_KEY,
     secretForgotToken: process.env.SECRET_ACTION_FORGOT_TOKEN_KEY,
   },
-  postgres: {
-    port: parseInt(process.env.DATABASE_HOST),
-    host: process.env.DATABASE_PORT,
-    dbName: process.env.DATABASE_USER,
-    user: process.env.DATABASE_NAME,
+  mysql: {
+    port: parseInt(process.env.DATABASE_PORT),
+    host: process.env.DATABASE_HOST,
+    dbName: process.env.DATABASE_NAME,
+    user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
-    rumMigrations: process.env.DATABASE_RUN_MIGRATIONS,
+    runMigrations: process.env.DATABASE_RUN_MIGRATIONS === 'true',
   },
 });

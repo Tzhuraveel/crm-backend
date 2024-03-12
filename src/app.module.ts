@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import configuration from './config/config';
-import { TypeOrmConfigurations } from './config/db/type-orm-configuration';
 import { PassportWrapperModule } from './core/passport';
 import { AdminModule } from './module/admin';
 import { AuthModule } from './module/auth/auth.module';
@@ -15,6 +13,7 @@ import { GroupModule } from './module/group';
 import { ManagementModule } from './module/management';
 import { OrderModule } from './module/order';
 import { TokenModule } from './module/token';
+import { MySQLModule } from './module/typeorm';
 import { UserModule } from './module/user';
 
 @Module({
@@ -25,7 +24,7 @@ import { UserModule } from './module/user';
     }),
     AuthModule,
     PassportWrapperModule,
-    TypeOrmModule.forRootAsync(TypeOrmConfigurations.config),
+    MySQLModule,
     ScheduleModule.forRoot(),
     TokenModule,
     CronModule,

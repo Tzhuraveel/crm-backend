@@ -1,6 +1,6 @@
 export type ConfigType = {
   app: AppConfig;
-  postgres: MySQLConfig;
+  mysql: MysqlConfig;
 };
 
 export type AppConfig = {
@@ -11,11 +11,11 @@ export type AppConfig = {
   secretToken: string;
 };
 
-export type MySQLConfig = {
+export type MysqlConfig = {
   port: number;
   host: string;
   user: string;
   password: string;
   dbName: string;
-  rumMigrations: string;
+  runMigrations: boolean;
 };
