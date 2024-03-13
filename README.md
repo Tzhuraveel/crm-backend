@@ -24,7 +24,7 @@ In addition, the API documentation is carefully prepared to help developers easi
 
 1. Clone the git repository
    ```bash 
-   git clone <url>
+   git clone https://github.com/Tzhuraveel/crm-backend.git
    ```
 2. Install all dependencies
    ```bash 
