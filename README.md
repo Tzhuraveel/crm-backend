@@ -9,8 +9,6 @@ The API provides robust filtering capabilities, allowing you to narrow down your
 This ensures that you have the flexibility to access the precise order data you need, optimizing your productivity.
 In addition, the API documentation is carefully prepared to help developers easily integrate and use the API in their projects.
 
->Note that this is only the backend of the project. The client part of the project can be found here [FRONT](https://github.com/Orest-Sabara/crm-frontend)
-
 
 # Main technologies
 
@@ -56,7 +54,10 @@ You can log in to the project using the following credentials and endpoint:
 ```http
   POST /auth/login
 ```
-Now you are able to use other endpoint. Other endpoints described here [SWAGGER](http://localhost:5000/api/doc/#/) 
+Now you are able to use other endpoint. Other endpoints described here http://localhost:5000/docs 
+
+>Please note that to access the swagger, you need to use the port on which the application will be launched.
+
 
 # Collection
 
