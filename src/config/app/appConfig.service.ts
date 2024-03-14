@@ -17,16 +17,4 @@ export class AppConfigService extends AbstractAppConfigService {
   get host(): string {
     return this.appConfig.host;
   }
-
-  get secretToken(): string {
-    return this.appConfig.secretToken;
-  }
-
-  get secretForgotToken(): string {
-    return this.appConfig.secretForgotToken;
-  }
-
-  get secretActivateToken(): string {
-    return this.appConfig.secretActivateToken;
-  }
 }

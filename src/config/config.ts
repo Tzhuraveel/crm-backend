@@ -6,9 +6,16 @@ export default (): ConfigType => ({
   app: {
     port: parseInt(process.env.APP_PORT),
     host: process.env.APP_HOST,
+  },
+  auth: {
     secretToken: process.env.SECRET_TOKEN_KEY,
-    secretActivateToken: process.env.SECRET_ACTION_ACTIVATE_TOKEN_KEY,
-    secretForgotToken: process.env.SECRET_ACTION_FORGOT_TOKEN_KEY,
+    secretForgotToken: process.env.SECRET_ACTION_FORGOT_TOKEN,
+    secretActivateToken: process.env.SECRET_ACTION_ACTIVATE_TOKEN,
+    secretTokenExpiration: process.env.SECRET_TOKEN_EXPERATION,
+    secretActivateTokenExpiration:
+      process.env.SECRET_ACTION_ACTIVATE_TOKEN_EXPERATION,
+    secretForgotTokenExpiration:
+      process.env.SECRET_ACTION_FORGOT_TOKEN_EXPERATION,
   },
   mysql: {
     port: parseInt(process.env.DATABASE_PORT),

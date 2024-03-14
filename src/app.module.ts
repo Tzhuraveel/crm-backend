@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 
+import { AppConfigModule } from './config/app';
 import configuration from './config/config';
 import { PassportWrapperModule } from './core/passport';
 import { AdminModule } from './module/admin';
@@ -18,16 +19,17 @@ import { UserModule } from './module/user';
 
 @Module({
   imports: [
+    AppConfigModule,
     ConfigModule.forRoot({
-      load: [configuration],
       isGlobal: true,
+      load: [configuration],
     }),
-    AuthModule,
     PassportWrapperModule,
     MySQLModule,
     ScheduleModule.forRoot(),
     TokenModule,
     CronModule,
+    AuthModule,
     OrderModule,
     UserModule,
     GroupModule,

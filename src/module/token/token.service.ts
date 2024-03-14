@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { LessThan } from 'typeorm';
 
-import { AppConfigService } from '../../config/app';
+import { AuthConfigService } from '../../config/auth';
 import { ActionToken, Token } from '../../core/database/entities';
 import { ActionTokenRepository } from './action-token.repository';
 import { EActionToken } from './model/enum';
@@ -20,7 +20,7 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly tokenRepository: TokenRepository,
     private readonly actionTokenRepository: ActionTokenRepository,
-    private readonly appConfigService: AppConfigService,
+    private readonly authConfigService: AuthConfigService,
   ) {}
 
   public async verifyAuthToken(token): Promise<ITokenPayload> {
@@ -40,10 +40,10 @@ export class TokenService {
 
     switch (typeToken) {
       case EActionToken.ACTIVATE:
-        secret = this.appConfigService.secretActivateToken;
+        secret = this.authConfigService.secretActivateToken;
         break;
       case EActionToken.FORGOT:
-        secret = this.appConfigService.secretForgotToken;
+        secret = this.authConfigService.secretForgotToken;
         break;
     }
 
@@ -74,8 +74,8 @@ export class TokenService {
 
   public async getActivateToken(payload: ITokenPayload): Promise<string> {
     const activateToken = await this.jwtService.signAsync(payload, {
-      secret: this.appConfigService.secretActivateToken,
-      expiresIn: '10m',
+      secret: this.authConfigService.secretActivateToken,
+      expiresIn: this.authConfigService.secretActivateTokenExpiration,
     });
 
     await this.actionTokenRepository.save({
@@ -89,8 +89,8 @@ export class TokenService {
 
   public async getForgotToken(payload: ITokenPayload): Promise<string> {
     const forgotToken = await this.jwtService.signAsync(payload, {
-      secret: this.appConfigService.secretForgotToken,
-      expiresIn: '10m',
+      secret: this.authConfigService.secretForgotToken,
+      expiresIn: this.authConfigService.secretForgotTokenExpiration,
     });
 
     await this.actionTokenRepository.save({

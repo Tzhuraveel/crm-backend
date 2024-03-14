@@ -1,14 +1,21 @@
 export type ConfigType = {
   app: AppConfig;
+  auth: AuthConfig;
   mysql: MysqlConfig;
 };
 
 export type AppConfig = {
   port: number;
   host: string;
+};
+
+export type AuthConfig = {
   secretActivateToken: string;
   secretForgotToken: string;
   secretToken: string;
+  secretTokenExpiration: string;
+  secretActivateTokenExpiration: string;
+  secretForgotTokenExpiration: string;
 };
 
 export type MysqlConfig = {

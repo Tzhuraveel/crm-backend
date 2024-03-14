@@ -1,24 +1,24 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { AppConfigModule, AppConfigService } from '../../config/app';
+import { AuthConfigModule, AuthConfigService } from '../../config/auth';
 import { ActionTokenRepository } from './action-token.repository';
 import { TokenRepository } from './token.repository';
 import { TokenService } from './token.service';
 
 @Module({
   imports: [
-    AppConfigModule,
+    AuthConfigModule,
     JwtModule.registerAsync({
-      imports: [AppConfigModule],
-      useFactory: async (appConfigService: AppConfigService) => ({
+      imports: [AuthConfigModule],
+      useFactory: async (appConfigService: AuthConfigService) => ({
         secret: appConfigService.secretToken,
         signOptions: {
-          expiresIn: '10m',
+          expiresIn: appConfigService.secretTokenExpiration,
         },
         global: true,
       }),
-      inject: [AppConfigService],
+      inject: [AuthConfigService],
     }),
   ],
   providers: [TokenService, TokenRepository, ActionTokenRepository],
