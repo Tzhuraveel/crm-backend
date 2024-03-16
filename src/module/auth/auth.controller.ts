@@ -22,13 +22,13 @@ import { User } from '../../core/database/entities';
 import { BearerGuard } from '../../core/guard';
 import { ITokenPair } from '../token/model/interface';
 import { UserResponseDto } from '../user/model/dto';
-import { AuthService } from './auth.service';
 import {
   AccessResponseDto,
   LoginDto,
   PasswordDto,
   TokenResponseDto,
 } from './model/dto';
+import { AuthService } from './services/auth.service';
 
 @ApiTags('auth')
 @Controller('auth')

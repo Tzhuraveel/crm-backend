@@ -9,21 +9,21 @@ import {
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
 
-import { User } from '../../core/database/entities';
-import { EDbField, EDynamicallyAction } from '../../core/enum';
-import { NotFoundEntityException } from '../../core/exception';
-import { TokenService } from '../token';
-import { EActionToken } from '../token/model/enum';
-import { ITokenPair, ITokenPayload } from '../token/model/interface';
-import { UserResponseDto } from '../user/model/dto';
-import { UserMapper } from '../user/user.mapper';
-import { UserRepository } from '../user/user.repository';
+import { User } from '../../../core/database/entities';
+import { EDbField, EDynamicallyAction } from '../../../core/enum';
+import { NotFoundEntityException } from '../../../core/exception';
+import { TokenService } from '../../token';
+import { EActionToken } from '../../token/model/enum';
+import { ITokenPair, ITokenPayload } from '../../token/model/interface';
+import { UserResponseDto } from '../../user/model/dto';
+import { UserMapper } from '../../user/user.mapper';
+import { UserRepository } from '../../user/user.repository';
 import {
   AccessResponseDto,
   LoginDto,
   PasswordDto,
   RegisterDto,
-} from './model/dto';
+} from '../model/dto';
 import { PasswordService } from './password.service';
 
 dayjs.extend(utc);
