@@ -11,10 +11,10 @@ import { TokenService } from './token.service';
     AuthConfigModule,
     JwtModule.registerAsync({
       imports: [AuthConfigModule],
-      useFactory: async (appConfigService: AuthConfigService) => ({
-        secret: appConfigService.secretToken,
+      useFactory: async (authConfigService: AuthConfigService) => ({
+        secret: authConfigService.secretToken,
         signOptions: {
-          expiresIn: appConfigService.secretTokenExpiration,
+          expiresIn: authConfigService.secretTokenExpiration,
         },
         global: true,
       }),
