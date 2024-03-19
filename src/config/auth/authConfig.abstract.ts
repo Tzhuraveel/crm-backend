@@ -1,8 +1,10 @@
 export abstract class AbstractAuthConfigService {
-  abstract get secretToken(): string;
-  abstract get secretTokenExpiration(): string;
-  abstract get secretActivateToken(): string;
-  abstract get secretActivateTokenExpiration(): string;
-  abstract get secretForgotToken(): string;
-  abstract get secretForgotTokenExpiration(): string;
+  abstract get accessSecretToken(): string;
+  abstract get accessSecretTokenExpiration(): string;
+  abstract get refreshSecretToken(): string;
+  abstract get refreshSecretTokenExpiration(): string;
+  abstract get activateSecretToken(): string;
+  abstract get activateSecretTokenExpiration(): string;
+  abstract get forgotSecretToken(): string;
+  abstract get forgotSecretTokenExpiration(): string;
 }

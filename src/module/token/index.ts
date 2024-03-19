@@ -1,2 +1,2 @@
 export * from './token.module';
-export * from './token.service';
+export * from './services/token.service';

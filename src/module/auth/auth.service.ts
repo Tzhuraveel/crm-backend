@@ -15,6 +15,7 @@ import { NotFoundEntityException } from '../../core/exception';
 import { TokenService } from '../token';
 import { EActionToken } from '../token/model/enum';
 import { ITokenPair, ITokenPayload } from '../token/model/interface';
+import { ActionTokenService } from '../token/services/action-token.service';
 import { UserResponseDto } from '../user/model/dto';
 import { UserMapper } from '../user/user.mapper';
 import { UserRepository } from '../user/user.repository';
@@ -32,6 +33,7 @@ dayjs.extend(utc);
 export class AuthService {
   constructor(
     private readonly tokenService: TokenService,
+    private readonly actionTokenService: ActionTokenService,
     private readonly passwordService: PasswordService,
     private readonly userRepository: UserRepository,
     private readonly userMapper: UserMapper,
@@ -149,7 +151,7 @@ export class AuthService {
     if (userFromDb.is_active)
       throw new ConflictException('User is already activated');
 
-    return await this.tokenService.getActivateToken({
+    return await this.actionTokenService.getActivateToken({
       userId,
       role: userFromDb.role,
     });
@@ -162,7 +164,7 @@ export class AuthService {
       EDbField.ID,
     );
 
-    return await this.tokenService.getForgotToken({
+    return await this.actionTokenService.getForgotToken({
       userId,
       role: userFromDb.role,
     });
@@ -172,9 +174,12 @@ export class AuthService {
     token: string,
     userDate: PasswordDto,
   ): Promise<UserResponseDto> {
-    await this.tokenService.verifyActionToken(token, EActionToken.ACTIVATE);
+    await this.actionTokenService.verifyActionToken(
+      token,
+      EActionToken.ACTIVATE,
+    );
 
-    const { userId } = await this.tokenService.findByActionToken(
+    const { userId } = await this.actionTokenService.findByActionToken(
       token,
       EActionToken.ACTIVATE,
     );
@@ -190,7 +195,7 @@ export class AuthService {
         is_active: true,
         password: hashedPassword,
       }),
-      this.tokenService.deleteActionToken(token),
+      this.actionTokenService.deleteActionToken(token),
     ]);
 
     const updatedUser: User = await this.userRepository.findOne({
@@ -204,9 +209,9 @@ export class AuthService {
     token: string,
     userDate: PasswordDto,
   ): Promise<void> {
-    await this.tokenService.verifyActionToken(token, EActionToken.FORGOT);
+    await this.actionTokenService.verifyActionToken(token, EActionToken.FORGOT);
 
-    const { userId } = await this.tokenService.findByActionToken(
+    const { userId } = await this.actionTokenService.findByActionToken(
       token,
       EActionToken.FORGOT,
     );
@@ -221,7 +226,7 @@ export class AuthService {
       this.userRepository.update(userId, {
         password: hashedPassword,
       }),
-      this.tokenService.deleteActionToken(token),
+      this.actionTokenService.deleteActionToken(token),
     ]);
   }
 }

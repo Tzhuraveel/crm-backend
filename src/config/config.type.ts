@@ -10,12 +10,14 @@ export type AppConfig = {
 };
 
 export type AuthConfig = {
-  secretActivateToken: string;
-  secretForgotToken: string;
-  secretToken: string;
-  secretTokenExpiration: string;
-  secretActivateTokenExpiration: string;
-  secretForgotTokenExpiration: string;
+  accessTokenSecret: string;
+  accessTokenSecretExpiration: string;
+  refreshTokenSecret: string;
+  refreshTokenSecretExpiration: string;
+  activateSecretToken: string;
+  activateSecretTokenExpiration: string;
+  forgotSecretToken: string;
+  forgotSecretTokenExpiration: string;
 };
 
 export type MysqlConfig = {

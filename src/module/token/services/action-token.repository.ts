@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { ActionToken } from '../../core/database/entities';
+import { ActionToken } from '../../../core/database/entities';
 
 @Injectable()
 export class ActionTokenRepository extends Repository<ActionToken> {

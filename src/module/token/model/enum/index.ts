@@ -1,1 +1,1 @@
-export * from './token.enum';
+export * from './action-token.enum';

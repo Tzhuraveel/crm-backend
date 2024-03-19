@@ -8,14 +8,14 @@ export default (): ConfigType => ({
     host: process.env.APP_HOST,
   },
   auth: {
-    secretToken: process.env.SECRET_TOKEN_KEY,
-    secretForgotToken: process.env.SECRET_ACTION_FORGOT_TOKEN,
-    secretActivateToken: process.env.SECRET_ACTION_ACTIVATE_TOKEN,
-    secretTokenExpiration: process.env.SECRET_TOKEN_EXPERATION,
-    secretActivateTokenExpiration:
-      process.env.SECRET_ACTION_ACTIVATE_TOKEN_EXPERATION,
-    secretForgotTokenExpiration:
-      process.env.SECRET_ACTION_FORGOT_TOKEN_EXPERATION,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+    accessTokenSecretExpiration: process.env.ACCESS_TOKEN_SECRET_EXPIRATION,
+    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+    refreshTokenSecretExpiration: process.env.REFRESH_TOKEN_SECRET_EXPIRATION,
+    activateSecretToken: process.env.ACTIVATE_TOKEN_SECRET,
+    activateSecretTokenExpiration: process.env.ACTIVATE_TOKEN_SECRET_EXPIRATION,
+    forgotSecretToken: process.env.FORGOT_TOKEN_SECRET,
+    forgotSecretTokenExpiration: process.env.FORGOT_TOKEN_SECRET_EXPERITION,
   },
   mysql: {
     port: parseInt(process.env.DATABASE_PORT),

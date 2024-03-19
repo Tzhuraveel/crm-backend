@@ -11,26 +11,35 @@ export class AuthConfigService extends AbstractAuthConfigService {
     super();
   }
 
-  get secretToken(): string {
-    return this.authConfig.secretToken;
-  }
-  get secretTokenExpiration(): string {
-    return this.authConfig.secretTokenExpiration;
+  get accessSecretToken(): string {
+    return this.authConfig.accessTokenSecret;
   }
 
-  get secretForgotToken(): string {
-    return this.authConfig.secretForgotToken;
+  get accessSecretTokenExpiration(): string {
+    return this.authConfig.accessTokenSecretExpiration;
   }
 
-  get secretForgotTokenExpiration(): string {
-    return this.authConfig.secretForgotTokenExpiration;
+  get refreshSecretToken(): string {
+    return this.authConfig.refreshTokenSecret;
   }
 
-  get secretActivateToken(): string {
-    return this.authConfig.secretActivateToken;
+  get refreshSecretTokenExpiration(): string {
+    return this.authConfig.refreshTokenSecretExpiration;
   }
 
-  get secretActivateTokenExpiration(): string {
-    return this.authConfig.secretActivateTokenExpiration;
+  get activateSecretToken(): string {
+    return this.authConfig.activateSecretToken;
+  }
+
+  get activateSecretTokenExpiration(): string {
+    return this.authConfig.activateSecretTokenExpiration;
+  }
+
+  get forgotSecretToken(): string {
+    return this.authConfig.forgotSecretToken;
+  }
+
+  get forgotSecretTokenExpiration(): string {
+    return this.authConfig.forgotSecretTokenExpiration;
   }
 }
